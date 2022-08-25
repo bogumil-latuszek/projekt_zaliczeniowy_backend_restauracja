@@ -1,0 +1,32 @@
+{
+  "name": "projekt_zalicz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bogumil-latuszek/projekt_zaliczeniowy_backend_restauracja.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bogumil-latuszek/projekt_zaliczeniowy_backend_restauracja/issues"
+  },
+  "homepage": "https://github.com/bogumil-latuszek/projekt_zaliczeniowy_backend_restauracja#readme",
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.13",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.8",
+    "jest": "^28.1.3"
+  }
+}
