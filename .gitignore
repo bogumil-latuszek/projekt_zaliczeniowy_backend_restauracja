@@ -1,6 +1,9 @@
 
 node_modules
 
+#delete below line if app crashes(i added it without knowing if it will work)
+coverage
+
 # data storage for our Notes & Tags
 .notes.json
 .tags.json
