@@ -65,3 +65,6 @@ interface IDishAccess {
     UpdateDish(Dish:Dish): Promise<void>;
     DeleteDish(id:string): Promise<void>;
 }
+
+export { IEmployeeAccess, IRestaurantAccess, IReservationAccess, 
+    ITableAccess, IOrderAccess, IProductAccess, IDishAccess };
