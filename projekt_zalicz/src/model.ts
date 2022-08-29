@@ -17,6 +17,22 @@ export interface Dish{
     Category: string;
 }
 
+export interface Order{
+    Employee : {
+        Name: string;
+        Surename: string;
+        Position: string;
+    }
+    Dishes : [{
+        Name: string;
+        Price: number;
+        Category: string;
+    }]
+    Status: string;
+    Creation_date: string;
+    Bill: number; 
+}
+
 export interface Table{
     Name: string;
     Capacity: number;
