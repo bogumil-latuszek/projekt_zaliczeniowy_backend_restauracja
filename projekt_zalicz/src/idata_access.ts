@@ -21,7 +21,6 @@ interface IReservationAccess {
     HasReservation(id:string): Promise<boolean>;
     GetReservation(id:string): Promise<Reservation | undefined>;
     GetAllReservations(): Promise<Reservation[]>;
-    AddReservEmployeeation(Reservation:Reservation): Promise<Reservation>;
     UpdateReservation(Reservation:Reservation): Promise<void>;
     DeleteReservation(id:string): Promise<void>;
 }
