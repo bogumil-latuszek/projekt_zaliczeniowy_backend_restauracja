@@ -60,7 +60,7 @@ interface IDishAccess {
     HasDish(id:string): Promise<boolean>;
     GetDish(id:string): Promise<Dish | undefined>;
     GetAllDishes(): Promise<Dish[]>;
-    AddDish(Dish:Dish): Promise<Dish>;
+    AddDish(dish:Dish): Promise<Dish>;
     UpdateDish(Dish:Dish): Promise<void>;
     DeleteDish(id:string): Promise<void>;
 }

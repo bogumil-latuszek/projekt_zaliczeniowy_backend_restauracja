@@ -1,7 +1,7 @@
-import { Reservation } from 'model';
+import { Dish, Reservation } from 'model';
 import { IReservationAccess } from 'idata_access';
 import mongoose from "mongoose";
-import {Mongo_Reservation } from 'mongo_models';
+import {Mongo_Dish, Mongo_Reservation } from 'mongo_models';
 import config from 'config';
 
 let dbConnectingStarted: Boolean = false;
@@ -102,5 +102,18 @@ class DbReservation implements IReservationAccess {
         return Promise.resolve();
     }
 }
+
+// ---------------- Dish
+
+export async function AddDish(dish: Dish): Promise<Dish> {
+    try {
+        const mongo_dish = new Mongo_Dish({ ...dish });
+        const createdDish = await mongo_dish.save();
+        return createdDish;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 export {  DbReservation };
