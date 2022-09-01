@@ -1,9 +1,8 @@
-import { Reservation } from './model';
-import { IReservationAccess } from './idata_access';
+import { Reservation } from 'model';
+import { IReservationAccess } from 'idata_access';
 import mongoose from "mongoose";
-import {Mongo_Reservation } from './mongo_models';
-import config from './config';
-
+import {Mongo_Reservation } from 'mongo_models';
+import config from 'config';
 
 let dbConnectingStarted: Boolean = false;
 
