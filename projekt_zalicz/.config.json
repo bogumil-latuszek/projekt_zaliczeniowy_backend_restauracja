@@ -1,3 +1,4 @@
 {
-    "MONGO_URI": "mongodb://localhost:27017/restaurant"
+    "MONGO_URI": "mongodb://localhost:27017/myapp",
+    "MONGO_TEST_URI": "mongodb://localhost:27017/test"
 }

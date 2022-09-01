@@ -33,6 +33,25 @@ export function teardownDBConnection() {
     });
 }
 
+export async function connectDBForTesting() {
+    try {
+        await mongoose.connect(config.MONGO_TEST_URI);
+        console.log("DB:test started");
+    } catch (error) {
+        console.log("DB:test connect error");
+    }
+}
+
+export async function disconnectDBForTesting() {
+    try {
+        await mongoose.connection.close();
+        console.log("DB:test disconnected");
+    } catch (error) {
+        console.log("DB:test disconnect error");
+    }
+}
+
+
 class DbReservation implements IReservationAccess {
 
     constructor() {}

@@ -1,6 +1,8 @@
 import {
     setupDBConnection,
     teardownDBConnection,
+    connectDBForTesting,
+    disconnectDBForTesting,
 } from "../mongo_db_data_access";
 
 import {
@@ -12,12 +14,12 @@ import {
 
 
 describe("dishModel Testing", () => {
-    beforeAll(() => {
-        setupDBConnection();
+    beforeAll(async () => {
+        await connectDBForTesting();
     });
   
-    afterAll(() => {
-        teardownDBConnection();
+    afterAll(async () => {
+        await disconnectDBForTesting();
     });
 
     test('test Mongo_Dish creation', async () => {
