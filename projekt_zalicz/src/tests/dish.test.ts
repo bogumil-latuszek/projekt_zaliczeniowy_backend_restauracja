@@ -19,8 +19,8 @@ describe("dishModel Testing", () => {
     afterAll(() => {
         teardownDBConnection();
     });
-})
 
-test('empty test', () => {
-    expect(1).toEqual(1)
+    test('empty test', () => {
+        expect(1).toEqual(1)
+    });
 })
