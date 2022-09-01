@@ -19,9 +19,10 @@ describe("dishModel Testing", () => {
     });
   
     afterAll(async () => {
+        await Mongo_Dish.collection.drop();
         await disconnectDBForTesting();
     });
-
+    
     test('test Mongo_Dish creation', async () => {
         const cocaCola: Dish = {
             Name: "Coca Cola",
