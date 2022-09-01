@@ -1,6 +1,6 @@
 import { Reservation } from './model';
 import { IReservationAccess } from './idata_access';
-import { Schema, model, connect, Model } from 'mongoose';
+import mongoose from "mongoose";
 import {Mongo_Reservation } from './mongo_models';
 import config from './config';
 
@@ -10,14 +10,28 @@ let dbConnectingStarted: Boolean = false;
 export function setupDBConnection() {
     if (!dbConnectingStarted) {
         dbConnectingStarted = true;
-        connect(config.MONGO_URI)
+        mongoose.connect(config.MONGO_URI)
         .then(() => {
+            dbConnectingStarted = false;
             console.log("MongoDB started");
         })
         .catch(e => {
+            dbConnectingStarted = false;
+            console.log("Connecting MongoDB failed");
             console.log(e);
         });
     }
+}
+
+export function teardownDBConnection() {
+    mongoose.connection.close()
+    .then(() => {
+        console.log("MongoDB connection closed");
+    })
+    .catch(e => {
+        console.log("Closing MongoDB connection failed");
+        console.log(e);
+    });
 }
 
 class DbReservation implements IReservationAccess {
