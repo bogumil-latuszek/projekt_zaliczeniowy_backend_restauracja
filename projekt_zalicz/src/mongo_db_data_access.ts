@@ -80,15 +80,29 @@ class MongoDbReservation implements IReservationAccess {
 
 class MongoDbDishes implements IDishAccess {
 
-    async HasDish(id:string): Promise<boolean> {return Promise.resolve(false);}
+    async HasDish(_id:string): Promise<boolean> {
+        try {
+            let existing_doc = await Mongo_Dish.findById(_id);
+
+            if (existing_doc) { //doc or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
+    }
     async GetDish(id:string): Promise<Dish | undefined> {return Promise.resolve(undefined);}
     async GetAllDishes(): Promise<Dish[]> {return Promise.resolve([]);}
 
-    async AddDish(dish: Dish): Promise<Dish> {
+    async AddDish(dish: Dish): Promise<string> {
         try {
             const mongo_dish = new Mongo_Dish({ ...dish });
             const createdDish = await mongo_dish.save();
-            return createdDish;
+            return createdDish.id;
         } catch (err) {
             console.log(err);
         }
