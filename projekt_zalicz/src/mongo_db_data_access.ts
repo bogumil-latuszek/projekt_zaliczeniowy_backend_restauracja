@@ -5,35 +5,6 @@ import {Mongo_Dish, Mongo_Reservation } from 'mongo_models';
 import config from 'config';
 import { IDishAccess } from "idata_access";
 
-let dbConnectingStarted: Boolean = false;
-
-export function setupDBConnection() {
-    if (!dbConnectingStarted) {
-        dbConnectingStarted = true;
-        mongoose.connect(config.MONGO_URI)
-        .then(() => {
-            dbConnectingStarted = false;
-            console.log("MongoDB started");
-        })
-        .catch(e => {
-            dbConnectingStarted = false;
-            console.log("Connecting MongoDB failed");
-            console.log(e);
-        });
-    }
-}
-
-export function teardownDBConnection() {
-    mongoose.connection.close()
-    .then(() => {
-        console.log("MongoDB connection closed");
-    })
-    .catch(e => {
-        console.log("Closing MongoDB connection failed");
-        console.log(e);
-    });
-}
-
 export async function connectDBForTesting() {
     try {
         await mongoose.connect(config.MONGO_TEST_URI);

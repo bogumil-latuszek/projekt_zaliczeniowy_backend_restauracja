@@ -1,6 +1,4 @@
 import {
-    setupDBConnection,
-    teardownDBConnection,
     connectDBForTesting,
     disconnectDBForTesting,
 } from "../mongo_db_data_access";
