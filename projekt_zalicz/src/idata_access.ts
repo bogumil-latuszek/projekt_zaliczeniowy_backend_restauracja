@@ -58,7 +58,7 @@ interface IProductAccess {
 
 interface IDishAccess {
     HasDish(id:string): Promise<boolean>;
-    GetDish(id:string): Promise<Dish | undefined>;
+    GetDish(id:string): Promise<Dish>;
     GetAllDishes(): Promise<Dish[]>;
     AddDish(dish:Dish): Promise<string>;
     UpdateDish(Dish:Dish): Promise<void>;

@@ -8,20 +8,23 @@ import { Mongo_Dish, Mongo_Reservation } from "mongo_models"
 import { MongoDbDishes } from "mongo_db_data_access"
 import { getDishesAccess } from "data_access_selector"
 
+
+
 describe("Mongo model dish creation", () => {
     beforeAll(async () => {
         await connectDBForTesting();
     });
-  
+    
     afterAll(async () => {
         await disconnectDBForTesting();
     });
-  
+    
     afterEach(async () => {
         await Mongo_Dish.collection.drop();
     });
 
     test('create dish returns dish with new id', async () => {
+        
         //assume
         const cocaCola: Dish = {
             Name: "Coca Cola",
@@ -84,14 +87,15 @@ describe("AddDish Testing", () => {
 
 describe("HasDish Testing", () => {
     let db_dish = getDishesAccess();
+
     beforeAll(async () => {
         await connectDBForTesting();
     });
-  
+    
     afterAll(async () => {
         await disconnectDBForTesting();
     });
-  
+
     afterEach(async () => {
         try {
             await Mongo_Reservation.collection.drop();
@@ -130,5 +134,59 @@ describe("HasDish Testing", () => {
         let result = await db_dish.HasDish(new_dish_id);
         // assert
         expect(result).toEqual(true);
+    });
+});
+
+describe("GetDish Testing", () => {
+    let db_dish = getDishesAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Reservation.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('GetDish returns existing dish when given its id', async () =>{
+        // assume
+        let new_dish = {
+            Name: "pierogi", 
+            Price: 17,
+            Category: "dania główne"
+        }
+        let new_dish_id  = await db_dish.AddDish(new_dish);
+        // act
+        let result = await db_dish.GetDish(new_dish_id);
+        // assert
+        expect(result).toBeDefined();
+        expect(result).toHaveProperty("id");
+        expect(result.Category).toEqual(new_dish.Category);
+        expect(result.Name).toEqual(new_dish.Name);
+        expect(result.Price).toEqual(new_dish.Price);
+    });
+
+    test('GetDish throws error when given id of nonexisting dish', async () =>{
+        try{
+            //act
+            let result = await db_dish.GetDish("56e6dd2eb4494ed008d595bd");
+        }
+        catch (err) {
+            //assert
+            expect(err.message).toEqual("no dish found for given id");
+        }
+        
     });
 });
