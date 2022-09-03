@@ -247,6 +247,14 @@ describe("GetAllDishes Testing", () => {
         expect(result.length).toEqual(2);
         expect(result[0]).not.toEqual(result[1]);
     });
+
+    test('GetAllDishes returns empty array when there arent any dishes', async () =>{
+        // act
+        let result = await db_dish.GetAllDishes();
+        // assert
+        expect(result).toBeDefined();
+        expect(result.length).toEqual(0);
+    });
 });
 /*
     GetAllDishes(): Promise<Dish[]>;
