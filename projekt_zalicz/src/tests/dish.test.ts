@@ -189,4 +189,16 @@ describe("GetDish Testing", () => {
         }
         
     });
+
+    test('GetDish throws error when given id in inappropriate format', async () =>{
+        try{
+            //act
+            let result = await db_dish.GetDish("wrong format");
+        }
+        catch (err) {
+            //assert
+            expect(err.message).toEqual("id in inappropriate format");
+        }
+        
+    });
 });

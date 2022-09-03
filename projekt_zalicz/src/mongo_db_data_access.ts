@@ -96,11 +96,16 @@ class MongoDbDishes implements IDishAccess {
         }
     }
     async GetDish(_id:string): Promise<Dish> {
-        let existing_doc = await Mongo_Dish.findById(_id);
-        if (existing_doc == null) { //doc or null
-            throw new  Error("no dish found for given id")
+        try {
+            let existing_doc = await Mongo_Dish.findById(_id);
+            if (existing_doc == null) { //doc or null
+                throw new  Error("no dish found for given id");
+            }
+            return Promise.resolve(existing_doc);
         }
-        return Promise.resolve(existing_doc);
+        catch (error){
+            throw new  Error("no dish found for given id");
+        }
     }
     async GetAllDishes(): Promise<Dish[]> {return Promise.resolve([]);}
 
