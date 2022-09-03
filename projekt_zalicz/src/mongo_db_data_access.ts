@@ -107,7 +107,10 @@ class MongoDbDishes implements IDishAccess {
             throw new  Error("no dish found for given id");
         }
     }
-    async GetAllDishes(): Promise<Dish[]> {return Promise.resolve([]);}
+    async GetAllDishes(): Promise<Dish[]> {
+        let dishes: Dish[] = await Mongo_Dish.find()
+        return Promise.resolve(dishes);
+    }
 
     async AddDish(dish: Dish): Promise<string> {
         try {

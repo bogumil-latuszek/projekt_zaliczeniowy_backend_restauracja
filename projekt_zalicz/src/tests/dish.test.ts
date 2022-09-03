@@ -98,7 +98,7 @@ describe("HasDish Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Reservation.collection.drop();
+            await Mongo_Dish.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -150,7 +150,7 @@ describe("GetDish Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Reservation.collection.drop();
+            await Mongo_Dish.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -202,3 +202,55 @@ describe("GetDish Testing", () => {
         
     });
 });
+
+describe("GetAllDishes Testing", () => {
+    let db_dish = getDishesAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Dish.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('GetAllDishes returns all existing dishes', async () =>{
+        // assume
+        let new_dish1 = {
+            Name: "pierogi", 
+            Price: 17,
+            Category: "dania główne"
+        }
+        let new_dish1_id  = await db_dish.AddDish(new_dish1);
+        let new_dish2 = {
+            Name: "ogórkowa", 
+            Price: 8,
+            Category: "zupy"
+        }
+        let new_dish2_id  = await db_dish.AddDish(new_dish2);
+        // act
+        let result = await db_dish.GetAllDishes();
+        // assert
+        expect(result).toBeDefined();
+        expect(result.length).toEqual(2);
+        expect(result[0]).not.toEqual(result[1]);
+    });
+});
+/*
+    GetAllDishes(): Promise<Dish[]>;
+    AddDish(dish:Dish): Promise<string>;
+    UpdateDish(Dish:Dish): Promise<void>;
+    DeleteDish(id:string): Promise<void>;
+*/
