@@ -30,6 +30,7 @@ class DbReservation implements IReservationAccess {
 
     async HasReservation(id: string): Promise<boolean> {
         const reservation = await Mongo_Reservation.findById(id).lean();
+        //if id is a string but not in a certain way this returns error not false
         if(reservation == undefined)
         {
             return Promise.resolve(false);
