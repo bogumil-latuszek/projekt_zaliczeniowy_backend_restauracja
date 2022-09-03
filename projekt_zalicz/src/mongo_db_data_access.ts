@@ -122,7 +122,19 @@ class MongoDbDishes implements IDishAccess {
         }
     }
 
-    async UpdateDish(Dish:Dish): Promise<void> {};
+    async UpdateDish(dish:Dish, _id:string): Promise<void> {
+        let originalDish = await Mongo_Dish.findOne({_id});
+        if(originalDish != undefined){
+            originalDish.Name = dish.Name;
+            originalDish.Price = dish.Price;
+            originalDish.Category = dish.Category;
+            await originalDish.save()
+        }
+        else{
+            throw new Error("no such dish exists")
+        }
+        return Promise.resolve();
+    };
     async DeleteDish(id:string): Promise<void> {};
 }
 

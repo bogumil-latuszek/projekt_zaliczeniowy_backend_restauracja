@@ -256,9 +256,153 @@ describe("GetAllDishes Testing", () => {
         expect(result.length).toEqual(0);
     });
 });
+
+describe("AddDish Testing", () => {
+    let db_dish = getDishesAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Dish.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('AddDish returns valid id when given object that is a Dish', async () =>{
+        // assume
+        let new_dish = {
+            Name: "pomidorowa", 
+            Price: 6,
+            Category: "zupy"
+        }
+        // act
+        let new_dish_id  = await db_dish.AddDish(new_dish);
+        let new_dish_in_db = await db_dish.GetDish(new_dish_id);
+        // assert
+        expect(new_dish_in_db).toBeDefined();
+        expect(new_dish_in_db.Name).toEqual(new_dish.Name);
+        expect(new_dish_in_db.Price).toEqual(new_dish.Price);
+        expect(new_dish_in_db.Category).toEqual(new_dish.Category);
+    });
+
+    test('AddDish returns valid id when given object that is a Dish but has more fields', async () =>{
+        // assume
+        let new_dish = {
+            Name: "pomidorowa", 
+            Price: 6,
+            Category: "zupy",
+            additionalField1: "sdjflasjtwg4ds9",
+            additionalField2: "sdjflasdsfafdasj"
+        }
+        // act
+        let new_dish_id  = await db_dish.AddDish(new_dish);
+        let new_dish_in_db = await db_dish.GetDish(new_dish_id);
+        // assert
+        expect(new_dish_in_db).toBeDefined();
+        expect(new_dish_in_db.Name).toEqual(new_dish.Name);
+        expect(new_dish_in_db.Price).toEqual(new_dish.Price);
+        expect(new_dish_in_db.Category).toEqual(new_dish.Category);
+    });
+
+});
+
+describe("UpdateDish Testing", () => {
+    let db_dish = getDishesAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Dish.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('UpdateDish updates dish in db when given id of existing dish', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        let new_dish_id  = await db_dish.AddDish(new_dish);
+        let newer_dish = {
+            Name: "murzynek", 
+            Price: 16,
+            Category: "desery",
+            _id : new_dish_id
+        }
+        // act
+        await db_dish.UpdateDish(newer_dish, new_dish_id);
+        let second_dish_in_db = await db_dish.GetDish(new_dish_id);
+        // assert
+        expect(second_dish_in_db).toBeDefined();
+        expect(second_dish_in_db.Name).toEqual("murzynek");
+        expect(second_dish_in_db.Price).toEqual(16);
+        expect(second_dish_in_db.Category).toEqual("desery");
+    });
+
+    test('UpdateDish throws error when given id of nonexisting dish', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        let error = new Error("nothing for now")
+        // act
+        try{
+            await db_dish.UpdateDish(new_dish, "56e6dd2eb4494ed008d595bd")
+        }
+        catch(err) {
+            error.message = err.message;
+        }
+        // assert
+        expect(error.message).toEqual("no such dish exists");
+    });
+
+    test('UpdateDish throws error when given id with incorrect type', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        // act
+        try{
+            await db_dish.UpdateDish(new_dish, "wrong type")
+        }
+        catch(err) {
+            // assert
+            expect(err.message).toEqual("Cast to ObjectId failed for value \"wrong type\" (type string) at path \"_id\" for model \"Dish\"");
+        }
+    });
+
+
+});
 /*
-    GetAllDishes(): Promise<Dish[]>;
-    AddDish(dish:Dish): Promise<string>;
-    UpdateDish(Dish:Dish): Promise<void>;
     DeleteDish(id:string): Promise<void>;
 */
