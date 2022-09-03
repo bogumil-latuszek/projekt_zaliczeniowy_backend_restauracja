@@ -1,4 +1,5 @@
 {
+    "DATA_STORAGE_VARIANT": "db",
     "MONGO_URI": "mongodb://localhost:27017/restauracja",
     "MONGO_TEST_URI": "mongodb://localhost:27017/test"
 }
