@@ -24,7 +24,7 @@ export async function disconnectDBForTesting() {
 }
 
 
-class DbReservation implements IReservationAccess {
+class MongoDbReservation implements IReservationAccess {
 
     constructor() {}
 
@@ -78,7 +78,7 @@ class DbReservation implements IReservationAccess {
 
 // ---------------- Dish
 
-class DbDishes implements IDishAccess {
+class MongoDbDishes implements IDishAccess {
 
     async HasDish(id:string): Promise<boolean> {return Promise.resolve(false);}
     async GetDish(id:string): Promise<Dish | undefined> {return Promise.resolve(undefined);}
@@ -98,7 +98,7 @@ class DbDishes implements IDishAccess {
     async DeleteDish(id:string): Promise<void> {};
 }
 
-export {  DbDishes };
+export {  MongoDbDishes };
 
 
-export {  DbReservation };
+export {  MongoDbReservation};
