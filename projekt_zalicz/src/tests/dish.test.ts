@@ -403,6 +403,82 @@ describe("UpdateDish Testing", () => {
 
 
 });
-/*
-    DeleteDish(id:string): Promise<void>;
-*/
+
+describe("DeleteDish Testing", () => {
+    let db_dish = getDishesAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Dish.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('DeleteDish deletes dish in db when given id of existing dish', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        let new_dish_id  = await db_dish.AddDish(new_dish);
+        // act
+        await db_dish.DeleteDish(new_dish_id);
+        let new_dish_exists_in_db = await db_dish.HasDish(new_dish_id);
+        // assert
+        expect(new_dish_exists_in_db).toEqual(false)
+    });
+
+    test('DeleteDish throws error when given id of nonexisting dish', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        let error = new Error("nothing for now")
+        // act
+        try{
+            await db_dish.DeleteDish("56e6dd2eb4494ed008d595bd")
+        }
+        catch(err) {
+            error.message = err.message;
+        }
+        // assert
+        expect(error.message).toEqual("no such dish exists");
+    });
+
+    test('DeleteDish throws error when given id with incorrect type', async () =>{
+        // assume
+        let new_dish = {
+            Name: "ptasie mleczko", 
+            Price: 12,
+            Category: "desery"
+        }
+        let error = new Error("nothing for now")
+        // act
+        try{
+            await db_dish.DeleteDish("56e6dd2eb4494ed008d595bd")
+        }
+        catch(err) {
+            error.message = err.message;
+        }
+        // assert
+        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong type\" (type string) at path \"_id\" for model \"Dish\"");
+    });
+
+
+});

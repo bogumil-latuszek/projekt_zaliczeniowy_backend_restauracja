@@ -131,11 +131,16 @@ class MongoDbDishes implements IDishAccess {
             await originalDish.save()
         }
         else{
-            throw new Error("no such dish exists")
-        }
+            throw new Error("no such dish exists")}
         return Promise.resolve();
     };
-    async DeleteDish(id:string): Promise<void> {};
+    async DeleteDish(id:string): Promise<void> {
+        let retrived_dish = await Mongo_Dish.findOne({ id });
+        Mongo_Dish.deleteOne({_id: id})
+        return Promise.resolve();
+        //let found_dish = Mongo_Dish.findOne({id});
+        //if(found_dish != undefined)
+    };
 }
 
 export {  MongoDbDishes };
