@@ -7,7 +7,7 @@ import {
 
 import { Dish } from "model"
 import { Mongo_Dish } from "mongo_models"
-import { AddDish } from "mongo_db_data_access"
+import { DbDishes } from "mongo_db_data_access"
 
 
 describe("dishModel Testing", () => {
@@ -40,7 +40,8 @@ describe("dishModel Testing", () => {
             Price: 7.10,
             Category: "drink",
           };
-          const createdDish = await AddDish(sprite);
+          const dishDataAccess = new DbDishes()
+          const createdDish = await dishDataAccess.AddDish(sprite);
           expect(createdDish).toBeDefined();
           expect(createdDish.Name).toBe(sprite.Name);
           expect(createdDish.Price).toBe(sprite.Price);
