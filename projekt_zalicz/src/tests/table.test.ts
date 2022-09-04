@@ -46,19 +46,20 @@ describe("HasTable Testing", () => {
 
     test('HasTable returns true when asked for existing id', async () =>{
         // assume
-        let new_table : Table = 
+        let new_table1 : Table = 
         {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -73,10 +74,10 @@ describe("HasTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
-        let new_table_id  = await db_table.AddTable(new_table);
+        let new_table_id  = await db_table.AddTable(new_table1);
         // act
         let result = await db_table.HasTable(new_table_id);
         // assert
@@ -109,19 +110,20 @@ describe("GetTable Testing", () => {
 
     test('GetTable returns existing table when given its id', async () =>{
         // assume
-        let new_table : Table = 
+        let new_table1 : Table = 
         {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -136,19 +138,19 @@ describe("GetTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
-        let new_table_id  = await db_table.AddTable(new_table);
+        let new_table_id  = await db_table.AddTable(new_table1);
         // act
         let result = await db_table.GetTable(new_table_id);
         // assert
         expect(result).toBeDefined();
         expect(result).toHaveProperty("id");
-        expect(result.Name).toEqual(new_table.Name);
-        expect(result.Capacity).toEqual(new_table.Capacity);
-        expect(result.Status).toEqual(new_table.Status);
-        //expect(result.Order).toEqual(new_table.Order); //they are different becouse nested objects get assigned id-s too
+        expect(result.Name).toEqual(new_table1.Name);
+        expect(result.Capacity).toEqual(new_table1.Capacity);
+        expect(result.Status).toEqual(new_table1.Status);
+        //expect(result.Orders).toEqual(new_table.Orders); //they are different becouse nested objects get assigned id-s too
     });
 
     test('GetTable throws error when given id of nonexisting table', async () =>{
@@ -201,18 +203,20 @@ describe("GetAllTablees Testing", () => {
 
     test('GetAllTablees returns all existing tablees', async () =>{
         // assume
-        let new_table1 = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -227,22 +231,24 @@ describe("GetAllTablees Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
-        let new_table2 = {
+        let new_table2 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -257,7 +263,7 @@ describe("GetAllTablees Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
@@ -303,18 +309,20 @@ describe("AddTable Testing", () => {
 
     test('AddTable returns id of newly created table', async () => {
         //assume
-        let newtable: Table = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -329,30 +337,32 @@ describe("AddTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
         const tableDataAccess = getTablesAccess();
         //act
-        const createdTable_id = await tableDataAccess.AddTable(newtable);
+        const createdTable_id = await tableDataAccess.AddTable(new_table1);
         //assert
         expect(createdTable_id).toBeDefined();
     });
 
     test('AddTable returns valid id when given object that is a Table', async () =>{
         // assume
-        let new_table = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -367,34 +377,36 @@ describe("AddTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
     
         }
         // act
-        let new_table_id  = await db_table.AddTable(new_table);
+        let new_table_id  = await db_table.AddTable(new_table1);
         let new_table_in_db = await db_table.GetTable(new_table_id);
         // assert
         expect(new_table_in_db).toBeDefined();
-        expect(new_table_in_db.Name).toEqual(new_table.Name);
-        expect(new_table_in_db.Capacity).toEqual(new_table.Capacity);
-        expect(new_table_in_db.Status).toEqual(new_table.Status);
-        //expect(new_table_in_db.Order).toEqual(new_table.Order);//they are different becouse nested objects get assigned id-s too
+        expect(new_table_in_db.Name).toEqual(new_table1.Name);
+        expect(new_table_in_db.Capacity).toEqual(new_table1.Capacity);
+        expect(new_table_in_db.Status).toEqual(new_table1.Status);
+        //expect(new_table_in_db.Orders).toEqual(new_table.Orders);//they are different becouse nested objects get assigned id-s too
     });
 
     test('AddTable returns valid id when given object that is a Table but has more fields', async () =>{
         // assume
-        let new_table = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -409,19 +421,18 @@ describe("AddTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            },
-            AnotherField: "hsgklflshdskjlkj"
+            }]
     
         }
         // act
-        let new_table_id  = await db_table.AddTable(new_table);
+        let new_table_id  = await db_table.AddTable(new_table1);
         let new_table_in_db = await db_table.GetTable(new_table_id);
         // assert
         expect(new_table_in_db).toBeDefined();
-        expect(new_table_in_db.Name).toEqual(new_table.Name);
-        expect(new_table_in_db.Capacity).toEqual(new_table.Capacity);
-        expect(new_table_in_db.Status).toEqual(new_table.Status);
-        //expect(new_table_in_db.Order).toEqual(new_table.Order);//they are different becouse nested objects get assigned id-s too
+        expect(new_table_in_db.Name).toEqual(new_table1.Name);
+        expect(new_table_in_db.Capacity).toEqual(new_table1.Capacity);
+        expect(new_table_in_db.Status).toEqual(new_table1.Status);
+        //expect(new_table_in_db.Orders).toEqual(new_table.Orders);//they are different becouse nested objects get assigned id-s too
     });
 
 });
@@ -451,18 +462,20 @@ describe("UpdateTable Testing", () => {
 
     test('UpdateTable updates table in db when given id of existing table', async () =>{
         // assume
-        let new_table = {
+        let new_table : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -477,31 +490,40 @@ describe("UpdateTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
+    
         }
         let new_table_id  = await db_table.AddTable(new_table);
-        let newer_table = {
+        let newer_table : Table = 
+        {
             Name: "stolik2", 
             Capacity: 2,
             Status: "wolny",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
-                    Surename: "nowak",
+                    Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
-                    Name: "piwo",
-                    Price: 5,
-                    Category: "alkohole"
+                    Name: "grochówka",
+                    Price: 16,
+                    Category: "zupy"
+                },
+                {
+                    Name: "kotlet z ziemniakami",
+                    Price: 34,
+                    Category: "dania główne"
                 }],
-                Status: "wydany",
+                Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 5
-            }
+                Bill: 50
+            }]
+    
         }
         // act
         await db_table.UpdateTable(newer_table, new_table_id);
@@ -511,23 +533,25 @@ describe("UpdateTable Testing", () => {
         expect(second_table_in_db.Name).toEqual("stolik2");
         expect(second_table_in_db.Capacity).toEqual(2);
         expect(second_table_in_db.Status).toEqual("wolny");
-        //expect(new_table_in_db.Order).toEqual(new_table.Order);//they are different becouse nested objects get assigned id-s too
+        //expect(new_table_in_db.Orders).toEqual(new_table.Orders);//they are different becouse nested objects get assigned id-s too
     });
 
     test('UpdateTable throws error when given id of nonexisting table', async () =>{
         // assume
-        let new_table = {
+        let new_table : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -542,7 +566,8 @@ describe("UpdateTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            },
+            }]
+    
         }
         let error = new Error("nothing for now")
         // act
@@ -558,18 +583,20 @@ describe("UpdateTable Testing", () => {
 
     test('UpdateTable throws error when given id with incorrect type', async () =>{
         // assume
-        let new_table = {
+        let new_table : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -584,7 +611,8 @@ describe("UpdateTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            },
+            }]
+    
         }
         // act
         try{
@@ -624,18 +652,20 @@ describe("DeleteTable Testing", () => {
 
     test('DeleteTable deletes table in db when given id of existing table', async () =>{
         // assume
-        let new_table = {
+        let new_table : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -650,7 +680,8 @@ describe("DeleteTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            },
+            }]
+    
         }
         let new_table_id  = await db_table.AddTable(new_table);
         // act
@@ -662,18 +693,20 @@ describe("DeleteTable Testing", () => {
 
     test('DeleteTable doesnt change db at all when given id of nonexisting table, and doesnt throw any errors', async () =>{
         //assume
-        let new_table1 = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -688,21 +721,24 @@ describe("DeleteTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
+    
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
-        let new_table2 = {
-            Name: "stolik2", 
+        let new_table2 : Table = 
+        {
+            Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -717,7 +753,8 @@ describe("DeleteTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
+    
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         let result1 = await db_table.GetAllTables();
@@ -732,18 +769,20 @@ describe("DeleteTable Testing", () => {
 
     test('DeleteTable doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
         //assume
-        let new_table1 = {
+        let new_table1 : Table = 
+        {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -758,21 +797,24 @@ describe("DeleteTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
+    
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
-        let new_table2 = {
-            Name: "stolik2", 
+        let new_table2 : Table = 
+        {
+            Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Order: 
-            {
-                Employee : 
-                [{
+            Orders: 
+            [{
+                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
+                _Employee : 
+                {
                     Name: "jan",
                     Surename: "kowalski",
                     Position: "kelner"
-                }],
+                },
                 Dishes : 
                 [{
                     Name: "grochówka",
@@ -787,7 +829,8 @@ describe("DeleteTable Testing", () => {
                 Status: "oczekujący",
                 Creation_date: "2018-12-10T13:45:00.000",
                 Bill: 50
-            }
+            }]
+    
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         let result1 = await db_table.GetAllTables();

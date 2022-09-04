@@ -286,7 +286,7 @@ class MongoDbTables implements ITableAccess {
             originalTable.Name = table.Name;
             originalTable.Capacity = table.Capacity;
             originalTable.Status = table.Status;
-            originalTable.Order = table.Order;
+            originalTable.Orders = table.Orders;
             await originalTable.save()
         }
         else{

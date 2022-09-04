@@ -18,16 +18,9 @@ export interface Dish{
 }
 
 export interface Order{
-    Employee : {
-        Name: string;
-        Surename: string;
-        Position: string;
-    }
-    Dishes : [{
-        Name: string;
-        Price: number;
-        Category: string;
-    }]
+    Table_Id : string;
+    _Employee : Employee;
+    Dishes : Dish[];
     Status: string;
     Creation_date: string;
     Bill: number; 
@@ -37,13 +30,7 @@ export interface Table{
     Name: string;
     Capacity: number;
     Status: string;
-    Order:{
-        Employee : Employee[];
-        Dishes : Dish[];
-        Status: string;
-        Creation_date: string;
-        Bill: number; 
-    }
+    Orders: Order[];
 }
 
 export interface Restaurant{
@@ -54,6 +41,7 @@ export interface Restaurant{
     email: string;
     website: string;
 }
+
 
 export interface Product{
     Name: string;

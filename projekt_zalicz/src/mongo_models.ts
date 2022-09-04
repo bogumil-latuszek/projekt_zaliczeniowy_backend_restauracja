@@ -1,5 +1,5 @@
 import { Schema, model, Model } from 'mongoose';
-import {Employee, Restaurant, Reservation, Table, Product, Dish} from './model';
+import {Employee, Restaurant, Reservation, Table, Product, Dish, Order} from './model';
 
 const ReservationSchema = new Schema<Reservation> ({
     Table_Id : {type: String, required: true},
@@ -21,17 +21,20 @@ const DishSchema = new Schema<Dish>({
     Category: {type: String, required: true},
 })
 
+const OrderSchema = new Schema<Order>({
+    Table_Id : {type: String, required: true},
+    _Employee : {type: EmployeeSchema, required: true},
+    Dishes : {type: [DishSchema], required: true},
+    Status: {type: String, required: true}, //could use enum
+    Creation_date: {type: String, required: true},
+    Bill: {type: Number, required: true}
+})
+
 const TableSchema = new Schema<Table>({
     Name: {type: String, required: false},
     Capacity: {type: Number, required: true},
     Status: {type: String, required: true}, //could use enum
-    Order: {
-        Employee : [EmployeeSchema],
-        Dishes : [DishSchema],
-        Status: {type: String, required: true}, //could use enum
-        Creation_date: {type: String, required: true},
-        Bill: {type: Number, required: true}
-    }
+    Orders: [OrderSchema]
 })
 
 const RestaurantSchema = new Schema<Restaurant> ({
