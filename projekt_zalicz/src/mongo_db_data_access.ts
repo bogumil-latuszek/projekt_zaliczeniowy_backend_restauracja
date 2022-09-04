@@ -151,8 +151,13 @@ class MongoDbDishes implements IDishAccess {
     };
 
     async DeleteDish(id:string): Promise<void> {
-        await Mongo_Dish.findByIdAndDelete(id);
-        return Promise.resolve();
+        try{
+            await Mongo_Dish.findByIdAndDelete(id);
+            return Promise.resolve();
+        }
+        catch(err){
+            return Promise.resolve();
+        }
     };
 }
 
@@ -291,6 +296,7 @@ class MongoDbTables implements ITableAccess {
     async DeleteTable(id:string): Promise<void> {
         try{
             await Mongo_Table.findByIdAndDelete(id);
+            return Promise.resolve();
         }
         catch(err){
             return Promise.resolve();
@@ -349,8 +355,13 @@ class MongoDbEmployees implements IEmployeeAccess {
         return Promise.resolve();
     }
     async DeleteEmployee(id:string): Promise<void> {
-        await Mongo_Employee.findByIdAndDelete(id);
-        return Promise.resolve();
+        try{
+            await Mongo_Employee.findByIdAndDelete(id);
+            return Promise.resolve();
+        }
+        catch(err){
+            return Promise.resolve();
+        }
     }
 }
 

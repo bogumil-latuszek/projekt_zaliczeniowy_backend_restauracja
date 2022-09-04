@@ -378,7 +378,7 @@ describe("DeleteEmployee Testing", () => {
         expect(new_employee_exists_in_db).toEqual(false)
     });
 
-    test('DeleteEmployee doesnt change db at all when given id of nonexisting employee', async () => {
+    test('DeleteEmployee doesnt change db at all when given id of nonexisting Employee, and doesnt throw any errors', async () => {
         //assume
         let new_employee1 = {
             Name: "Sylvester",
@@ -393,7 +393,6 @@ describe("DeleteEmployee Testing", () => {
         }
         let new_employee2_id  = await db_employee.AddEmployee(new_employee2);
         let result1 = await db_employee.GetAllEmployees();
-        let error = new Error("nothing for now")
         // act
         await db_employee.DeleteEmployee("56e6dd2eb4494ed008d595bd")
         let result2 = await db_employee.GetAllEmployees();
@@ -402,17 +401,26 @@ describe("DeleteEmployee Testing", () => {
         expect(result1.length).toEqual(result2.length);
     });
 
-    test('DeleteEmployee throws error when given id with incorrect type', async () => {
-        // assume
-        let error = new Error("nothing for now")
+    test('DeleteEmployee doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () => {
+        //assume
+        let new_employee1 = {
+            Name: "Sylvester",
+            Surename: "Stalone",
+            Position: "rambo",
+        }
+        let new_employee1_id  = await db_employee.AddEmployee(new_employee1);
+        let new_employee2 = {
+            Name: "Arnold",
+            Surename: "Schwarzenegger",
+            Position: "terminator",
+        }
+        let new_employee2_id  = await db_employee.AddEmployee(new_employee2);
+        let result1 = await db_employee.GetAllEmployees();
         // act
-        try {
-            await db_employee.DeleteEmployee("wrong")
-        }
-        catch(err) {
-            error.message = err.message;
-        }
+        await db_employee.DeleteEmployee("56e6dd2eb4494ed008d595bd")
+        let result2 = await db_employee.GetAllEmployees();
         // assert
-        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong\" (type string) at path \"_id\" for model \"Employee\"");
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
     });
 });

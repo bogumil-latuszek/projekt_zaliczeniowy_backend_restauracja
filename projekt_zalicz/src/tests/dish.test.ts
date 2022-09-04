@@ -377,7 +377,7 @@ describe("DeleteDish Testing", () => {
         expect(new_dish_exists_in_db).toEqual(false)
     });
 
-    test('DeleteDish doesnt change db at all when given id of nonexisting dish', async () =>{
+    test('DeleteDish doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
         //assume
         let new_dish1 = {
             Name: "pierogi", 
@@ -392,17 +392,8 @@ describe("DeleteDish Testing", () => {
         }
         let new_dish2_id  = await db_dish.AddDish(new_dish2);
         let result1 = await db_dish.GetAllDishes();
-        let error = new Error("nothing for now")
         // act
-
-        try{
-            await db_dish.DeleteDish("56e6dd2eb4494ed008d595bd")
-            
-        }
-        catch(err) {
-            error.message = err.message;
-            expect(error.message).toEqual("no such dish exists");
-        }
+        await db_dish.DeleteDish("56e6dd2eb4494ed008d595bd")
         let result2 = await db_dish.GetAllDishes();
         // assert
 
@@ -410,22 +401,27 @@ describe("DeleteDish Testing", () => {
         expect(result1.length).toEqual(result2.length);
     });
 
-    test('DeleteDish throws error when given id with incorrect type', async () =>{
-        // assume
-        let new_dish = {
-            Name: "ptasie mleczko", 
-            Price: 12,
-            Category: "desery"
+    test('DeleteDish doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
+        //assume
+        let new_dish1 = {
+            Name: "pierogi", 
+            Price: 17,
+            Category: "dania główne"
         }
-        let error = new Error("nothing for now")
+        let new_dish1_id  = await db_dish.AddDish(new_dish1);
+        let new_dish2 = {
+            Name: "ogórkowa", 
+            Price: 8,
+            Category: "zupy"
+        }
+        let new_dish2_id  = await db_dish.AddDish(new_dish2);
+        let result1 = await db_dish.GetAllDishes();
         // act
-        try{
-            await db_dish.DeleteDish("wrong")
-        }
-        catch(err) {
-            error.message = err.message;
-        }
+        await db_dish.DeleteDish("56e6dd2eb4494ed008d595bd")
+        let result2 = await db_dish.GetAllDishes();
         // assert
-        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong\" (type string) at path \"_id\" for model \"Dish\"");
+
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
     });
 });
