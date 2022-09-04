@@ -5,85 +5,7 @@ import {
 
 import { Dish } from "model"
 import { Mongo_Dish, Mongo_Reservation } from "mongo_models"
-import { MongoDbDishes } from "mongo_db_data_access"
 import { getDishesAccess } from "data_access_selector"
-
-
-
-describe("Mongo model dish creation", () => {
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-    
-    afterEach(async () => {
-        await Mongo_Dish.collection.drop();
-    });
-
-    test('create dish returns dish with new id', async () => {
-        
-        //assume
-        const cocaCola: Dish = {
-            Name: "Coca Cola",
-            Price: 7.30,
-            Category: "drink",
-        };
-        //act
-        const dish = new Mongo_Dish({ ...cocaCola });
-        const createdDish = await dish.save();
-        //assert
-        expect(createdDish).toBeDefined();
-        expect(createdDish).toHaveProperty("_id");
-        expect(createdDish.Name).toBe(cocaCola.Name);
-        expect(createdDish.Price).toBe(cocaCola.Price);
-        expect(createdDish.Category).toBe(cocaCola.Category);
-    });
-})
-
-describe("AddDish Testing", () => {
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-  
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-  
-    afterEach(async () => {
-        await Mongo_Dish.collection.drop();
-    });
-
-    test('AddDish returns id of newly created dish (using Mongo data access layer)', async () => {
-        //assume
-        const sprite: Dish = {
-            Name: "Sprite",
-            Price: 7.10,
-            Category: "drink",
-        };
-        const dishDataAccess = new MongoDbDishes();
-        //act
-        const createdDish_id = await dishDataAccess.AddDish(sprite);
-        //assert
-        expect(createdDish_id).toBeDefined();
-    });
-
-    test('AddDish returns id of newly created dish (using config selected data access layer)', async () => {
-        //assume
-        const sprite: Dish = {
-            Name: "Sprite",
-            Price: 7.10,
-            Category: "drink",
-        };
-        const dishDataAccess = getDishesAccess();
-        //act
-        const createdDish_id = await dishDataAccess.AddDish(sprite);
-        //assert
-        expect(createdDish_id).toBeDefined();
-    });
-})
 
 describe("HasDish Testing", () => {
     let db_dish = getDishesAccess();
@@ -278,6 +200,20 @@ describe("AddDish Testing", () => {
                 throw err;
             }
         }
+    });
+
+    test('AddDish returns id of newly created dish', async () => {
+        //assume
+        const sprite: Dish = {
+            Name: "Sprite",
+            Price: 7.10,
+            Category: "drink",
+        };
+        const dishDataAccess = getDishesAccess();
+        //act
+        const createdDish_id = await dishDataAccess.AddDish(sprite);
+        //assert
+        expect(createdDish_id).toBeDefined();
     });
 
     test('AddDish returns valid id when given object that is a Dish', async () =>{
