@@ -393,7 +393,7 @@ describe("DeleteProduct Testing", () => {
         expect(new_product_exists_in_db).toEqual(false)
     });
 
-    test('DeleteProduct doesnt change db at all when given id of nonexisting product', async () =>{
+    test('DeleteProduct doesnt change db at all when given id of nonexisting product, and doesnt throw any errors', async () =>{
         //assume
         let new_product1= {
             Name: "ziemniaki", 
@@ -410,41 +410,36 @@ describe("DeleteProduct Testing", () => {
         }
         let new_product2_id  = await db_product.AddProduct(new_product2);
         let result1 = await db_product.GetAllProducts();
-        let error = new Error("nothing for now")
         // act
-
-        try{
-            await db_product.DeleteProduct("56e6dd2eb4494ed008d595bd")
-            
-        }
-        catch(err) {
-            error.message = err.message;
-            expect(error.message).toEqual("no such product exists");
-        }
+        await db_product.DeleteProduct("56e6dd2eb4494ed008d595bd")
         let result2 = await db_product.GetAllProducts();
         // assert
-
         expect(result2).toBeDefined();
         expect(result1.length).toEqual(result2.length);
     });
 
-    test('DeleteProduct throws error when given id with incorrect type', async () =>{
-        // assume
-        let new_product= {
+    test('DeleteProduct doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
+        //assume
+        let new_product1= {
             Name: "ziemniaki", 
             Price: 5,
             Quantity: 1,
             Measurement_Units: "kg"
         }
-        let error = new Error("nothing for now")
+        let new_product1_id  = await db_product.AddProduct(new_product1);
+        let new_product2= {
+            Name: "pieprz", 
+            Price: 13,
+            Quantity: 2,
+            Measurement_Units: "kg"
+        }
+        let new_product2_id  = await db_product.AddProduct(new_product2);
+        let result1 = await db_product.GetAllProducts();
         // act
-        try{
-            await db_product.DeleteProduct("wrong")
-        }
-        catch(err) {
-            error.message = err.message;
-        }
+        await db_product.DeleteProduct("wrong id")
+        let result2 = await db_product.GetAllProducts();
         // assert
-        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong\" (type string) at path \"_id\" for model \"Product\"");
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
     });
 });

@@ -215,8 +215,13 @@ class MongoDbProducts implements IProductAccess {
     };
 
     async DeleteProduct(id:string): Promise<void> {
-        await Mongo_Product.findByIdAndDelete(id);
-        return Promise.resolve();
+        try{
+            await Mongo_Product.findByIdAndDelete(id);
+            return Promise.resolve();
+        }
+        catch(err){
+            return Promise.resolve();
+        }
     };
 }
 
