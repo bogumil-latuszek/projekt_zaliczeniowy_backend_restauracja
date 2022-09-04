@@ -3,6 +3,7 @@ import {  IDishAccess, IReservationAccess, IProductAccess, IRestaurantAccess, IE
 import mongoose from "mongoose";
 import {Mongo_Dish, Mongo_Reservation, Mongo_Product, Mongo_Restaurant, Mongo_Employee, Mongo_Table} from 'mongo_models';
 import config from 'config';
+import { readConfigFile } from 'typescript';
 
 export async function connectDBForTesting() {
     try {
@@ -415,8 +416,14 @@ class MongoDbRestaurants implements IRestaurantAccess {
         return Promise.resolve();
     }
     async DeleteRestaurant(id:string): Promise<void> {
-        await Mongo_Restaurant.findByIdAndDelete(id);
-        return Promise.resolve();
+        try{
+            await Mongo_Restaurant.findByIdAndDelete(id);
+            return Promise.resolve();
+        }
+        catch(err){
+            return Promise.resolve();
+        }
+
     }
 }
 
