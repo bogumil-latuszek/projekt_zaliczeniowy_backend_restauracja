@@ -273,5 +273,60 @@ class MongoDbTables implements ITableAccess {
     };
 }
 
+class MongoDbEmployees implements IEmployeeAccess {
+    async HasEmployee(id: string): Promise<boolean> {
+        try {
+            let existing_employee = await Mongo_Employee.findById(id);
 
-export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables  };
+            if (existing_employee) { // employee or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
+    }
+    async GetEmployee(id: string): Promise<Employee>  {
+        try {
+            let existing_employee = await Mongo_Employee.findById(id);
+            if (existing_employee == null) { // employee or null
+                throw new  Error("no employee found for given id");
+            }
+            return Promise.resolve(existing_employee);
+        }
+        catch (error){
+            throw new  Error("no employee found for given id");
+        }
+    }
+    async GetAllEmployees(): Promise<Employee[]> {
+        let employees: Employee[] = await Mongo_Employee.find()
+        return Promise.resolve(employees);
+    }
+    async AddEmployee(employee: Employee): Promise<string> {
+        const mongo_employee = new Mongo_Employee({ ...employee });
+        const createdEmployee = await mongo_employee.save();
+        return Promise.resolve(createdEmployee.id);
+    }
+    async UpdateEmployee(employee: Employee, id: string): Promise<void> {
+        let originalEmployee = await Mongo_Employee.findById(id);
+        if (originalEmployee != null) {
+            originalEmployee.Name = employee.Name;
+            originalEmployee.Surename = employee.Surename;
+            originalEmployee.Position = employee.Position;
+            await originalEmployee.save()
+        }
+        else {
+            throw new Error("no such employee exists")
+        }
+        return Promise.resolve();
+    }
+    async DeleteEmployee(id:string): Promise<void> {
+        await Mongo_Employee.findByIdAndDelete(id);
+        return Promise.resolve();
+    }
+}
+
+export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees  };

@@ -1,12 +1,12 @@
 import {Employee, Restaurant, Reservation, Table, Order, Product, Dish} from './model';
 
 interface IEmployeeAccess {
-    HasEmployee(id:string): Promise<boolean>;
-    GetEmployee(id:string): Promise<Employee | undefined>;
+    HasEmployee(id: string): Promise<boolean>;
+    GetEmployee(id: string): Promise<Employee>;
     GetAllEmployees(): Promise<Employee[]>;
-    AddEmployee(Employee:Employee): Promise<Employee>;
-    UpdateEmployee(Employee:Employee): Promise<void>;
-    DeleteEmployee(id:string): Promise<void>;
+    AddEmployee(employee: Employee): Promise<string>;
+    UpdateEmployee(employee: Employee, id: string): Promise<void>;
+    DeleteEmployee(id: string): Promise<void>;
 }
 
 interface IRestaurantAccess {
