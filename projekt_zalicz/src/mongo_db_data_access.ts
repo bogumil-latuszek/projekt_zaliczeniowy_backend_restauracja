@@ -284,8 +284,12 @@ class MongoDbTables implements ITableAccess {
     };
 
     async DeleteTable(id:string): Promise<void> {
-        await Mongo_Table.findByIdAndDelete(id);
-        return Promise.resolve();
+        try{
+            await Mongo_Table.findByIdAndDelete(id);
+        }
+        catch(err){
+            return Promise.resolve();
+        }
     };
 }
 

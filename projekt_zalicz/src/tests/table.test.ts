@@ -660,7 +660,7 @@ describe("DeleteTable Testing", () => {
         expect(new_table_exists_in_db).toEqual(false)
     });
 
-    test('DeleteTable doesnt change db at all when given id of nonexisting table', async () =>{
+    test('DeleteTable doesnt change db at all when given id of nonexisting table, and doesnt throw any errors', async () =>{
         //assume
         let new_table1 = {
             Name: "stolik1", 
@@ -721,17 +721,8 @@ describe("DeleteTable Testing", () => {
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         let result1 = await db_table.GetAllTables();
-        let error = new Error("nothing for now")
         // act
-
-        try{
-            await db_table.DeleteTable("56e6dd2eb4494ed008d595bd")
-            
-        }
-        catch(err) {
-            error.message = err.message;
-            expect(error.message).toEqual("no such table exists");
-        }
+        await db_table.DeleteTable("56e6dd2eb4494ed008d595bd")
         let result2 = await db_table.GetAllTables();
         // assert
 
@@ -739,9 +730,9 @@ describe("DeleteTable Testing", () => {
         expect(result1.length).toEqual(result2.length);
     });
 
-    test('DeleteTable throws error when given id with incorrect type', async () =>{
-        // assume
-        let new_table = {
+    test('DeleteTable doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
+        //assume
+        let new_table1 = {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
@@ -769,15 +760,44 @@ describe("DeleteTable Testing", () => {
                 Bill: 50
             }
         }
-        let error = new Error("nothing for now")
+        let new_table1_id  = await db_table.AddTable(new_table1);
+        let new_table2 = {
+            Name: "stolik2", 
+            Capacity: 5,
+            Status: "zajęty",
+            Order: 
+            {
+                Employee : 
+                [{
+                    Name: "jan",
+                    Surename: "kowalski",
+                    Position: "kelner"
+                }],
+                Dishes : 
+                [{
+                    Name: "grochówka",
+                    Price: 16,
+                    Category: "zupy"
+                },
+                {
+                    Name: "kotlet z ziemniakami",
+                    Price: 34,
+                    Category: "dania główne"
+                }],
+                Status: "oczekujący",
+                Creation_date: "2018-12-10T13:45:00.000",
+                Bill: 50
+            }
+        }
+        let new_table2_id  = await db_table.AddTable(new_table2);
+        let result1 = await db_table.GetAllTables();
         // act
-        try{
-            await db_table.DeleteTable("wrong")
-        }
-        catch(err) {
-            error.message = err.message;
-        }
+        await db_table.DeleteTable("wrong id")
+        let result2 = await db_table.GetAllTables();
         // assert
-        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong\" (type string) at path \"_id\" for model \"Table\"");
+
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
     });
+
 });
