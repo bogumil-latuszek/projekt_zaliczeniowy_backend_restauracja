@@ -115,7 +115,7 @@ class MongoDbDishes implements IDishAccess {
         try {
             const mongo_dish = new Mongo_Dish({ ...dish });
             const createdDish = await mongo_dish.save();
-            return createdDish.id;
+            return Promise.resolve(createdDish.id);
         } catch (err) {
             console.log(err);
         }
@@ -178,7 +178,7 @@ class MongoDbProducts implements IProductAccess {
         try {
             const mongo_product = new Mongo_Product({ ...product });
             const createdProduct = await mongo_product.save();
-            return createdProduct.id;
+            return Promise.resolve(createdProduct.id);
         } catch (err) {
             console.log(err);
         }
