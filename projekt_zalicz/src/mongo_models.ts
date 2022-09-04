@@ -37,8 +37,8 @@ const TableSchema = new Schema<Table>({
 const RestaurantSchema = new Schema<Restaurant> ({
     Name: {type: String, required: true},
     Address: {type: String, required: true},
-    Phone: {type: Number, required: true},
-    nip: {type: Number, required: true},
+    Phone: {type: String, required: true},
+    nip: {type: String, required: true},
     email: {type: String, required: true},
     website: {type: String, required: false},
 })

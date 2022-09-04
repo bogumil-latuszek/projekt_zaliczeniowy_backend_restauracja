@@ -365,4 +365,59 @@ class MongoDbEmployees implements IEmployeeAccess {
     }
 }
 
-export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees };
+class MongoDbRestaurants implements IRestaurantAccess {
+    async HasRestaurant(id: string): Promise<boolean> {
+        try {
+            let existing_restaurant = await Mongo_Restaurant.findById(id);
+
+            if (existing_restaurant) { // restaurant or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
+    }
+    async GetRestaurant(id: string): Promise<Restaurant>  {
+        try {
+            let existing_restaurant = await Mongo_Restaurant.findById(id);
+            if (existing_restaurant == null) { // restaurant or null
+                throw new  Error("no restaurant found for given id");
+            }
+            return Promise.resolve(existing_restaurant);
+        }
+        catch (error){
+            throw new  Error("no restaurant found for given id");
+        }
+    }
+    async AddRestaurant(restaurant: Restaurant): Promise<string> {
+        const mongo_restaurant = new Mongo_Restaurant({ ...restaurant });
+        const createdRestaurant = await mongo_restaurant.save();
+        return Promise.resolve(createdRestaurant.id);
+    }
+    async UpdateRestaurant(restaurant: Restaurant, id: string): Promise<void> {
+        let originalRestaurant = await Mongo_Restaurant.findById(id);
+        if (originalRestaurant != null) {
+            originalRestaurant.Name = restaurant.Name;
+            originalRestaurant.Address = restaurant.Address;
+            originalRestaurant.Phone = restaurant.Phone;
+            originalRestaurant.nip = restaurant.nip;
+            originalRestaurant.email = restaurant.email;
+            originalRestaurant.website = restaurant.website;
+            await originalRestaurant.save()
+        }
+        else {
+            throw new Error("no such restaurant exists")
+        }
+        return Promise.resolve();
+    }
+    async DeleteRestaurant(id:string): Promise<void> {
+        await Mongo_Restaurant.findByIdAndDelete(id);
+        return Promise.resolve();
+    }
+}
+
+export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbRestaurants};

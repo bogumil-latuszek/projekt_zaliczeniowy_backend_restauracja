@@ -49,8 +49,8 @@ export interface Table{
 export interface Restaurant{
     Name: string;
     Address: string;
-    Phone: number;
-    nip: number;
+    Phone: string;
+    nip: string;
     email: string;
     website: string;
 }

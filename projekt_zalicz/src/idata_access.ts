@@ -10,11 +10,11 @@ interface IEmployeeAccess {
 }
 
 interface IRestaurantAccess {
-    HasRestaurant(id:string): Promise<boolean>;
-    GetRestaurant(id:string): Promise<Restaurant | undefined>;
-    AddRestaurant(Restaurant:Restaurant): Promise<Restaurant>;
-    UpdateRestaurant(Restaurant:Restaurant): Promise<void>;
-    DeleteRestaurant(id:string): Promise<void>;
+    HasRestaurant(id: string): Promise<boolean>;
+    GetRestaurant(id: string): Promise<Restaurant>;
+    AddRestaurant(restaurant: Restaurant): Promise<string>;
+    UpdateRestaurant(restaurant: Restaurant, id: string): Promise<void>;
+    DeleteRestaurant(id: string): Promise<void>;
 }
 
 interface IReservationAccess {

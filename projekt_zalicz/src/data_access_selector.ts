@@ -2,8 +2,8 @@
    returning proper variant of data access layer
    (curently we have only MongoDB data access)
 */
-import { IDishAccess, IProductAccess, ITableAccess, IEmployeeAccess, IReservationAccess} from "idata_access"
-import { MongoDbDishes, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbReservation} from "mongo_db_data_access"
+import { IDishAccess, IProductAccess, ITableAccess, IEmployeeAccess, IReservationAccess, IRestaurantAccess} from "idata_access"
+import { MongoDbDishes, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbReservation, MongoDbRestaurants} from "mongo_db_data_access"
 import config from 'config';
 
 let selectedDataStorage = config.DATA_STORAGE_VARIANT;
@@ -48,6 +48,15 @@ export function getEmployeeAccess(): IEmployeeAccess {
 export function getReservationAccess(): IReservationAccess {
     if (selectedDataStorage == "mongodb"){
         return new MongoDbReservation();
+    }
+    else{
+        throw new Error(`${selectedDataStorage} is not a valid storage variant`);
+    }
+}
+
+export function getRestaurantAccess(): IRestaurantAccess {
+    if (selectedDataStorage == "mongodb"){
+        return new MongoDbRestaurants();
     }
     else{
         throw new Error(`${selectedDataStorage} is not a valid storage variant`);
