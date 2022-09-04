@@ -289,7 +289,6 @@ describe("UpdateDish Testing", () => {
             Name: "murzynek", 
             Price: 16,
             Category: "desery",
-            _id : new_dish_id
         }
         // act
         await db_dish.UpdateDish(newer_dish, new_dish_id);
@@ -345,11 +344,11 @@ describe("DeleteDish Testing", () => {
 
     beforeAll(async () => {
         await connectDBForTesting();
-    } , 1000000);
+    });
     
     afterAll(async () => {
         await disconnectDBForTesting();
-    }, 1000000);
+    });
 
     afterEach(async () => {
         try {
@@ -361,7 +360,7 @@ describe("DeleteDish Testing", () => {
                 throw err;
             }
         }
-    }, 1000000);
+    });
 
     test('DeleteDish deletes dish in db when given id of existing dish', async () =>{
         // assume

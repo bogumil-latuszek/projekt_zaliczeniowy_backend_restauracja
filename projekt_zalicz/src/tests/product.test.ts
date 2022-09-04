@@ -301,7 +301,6 @@ describe("UpdateProduct Testing", () => {
             Price: 7,
             Quantity: 1,
             Measurement_Units: "kg",
-            _id : new_product_id
         }
         // act
         await db_product.UpdateProduct(newer_product, new_product_id);
@@ -360,11 +359,11 @@ describe("DeleteProduct Testing", () => {
 
     beforeAll(async () => {
         await connectDBForTesting();
-    } , 1000000);
+    });
     
     afterAll(async () => {
         await disconnectDBForTesting();
-    }, 1000000);
+    });
 
     afterEach(async () => {
         try {
@@ -376,7 +375,7 @@ describe("DeleteProduct Testing", () => {
                 throw err;
             }
         }
-    }, 1000000);
+    });
 
     test('DeleteProduct deletes product in db when given id of existing product', async () =>{
         // assume
