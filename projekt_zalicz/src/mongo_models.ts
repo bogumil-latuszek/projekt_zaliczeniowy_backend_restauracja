@@ -26,16 +26,8 @@ const TableSchema = new Schema<Table>({
     Capacity: {type: Number, required: true},
     Status: {type: String, required: true}, //could use enum
     Order: {
-        Employee : {
-            Name: {type: String, required: true},
-            Surename: {type: String, required: true},
-            Position: {type: String, required: true},
-        },
-        Dishes : [{
-            Name: {type: String, required: true},
-            Price: {type: Number, required: true},
-            Category: {type: String, required: true},
-        }],
+        Employee : [EmployeeSchema],
+        Dishes : [DishSchema],
         Status: {type: String, required: true}, //could use enum
         Creation_date: {type: String, required: true},
         Bill: {type: Number, required: true}

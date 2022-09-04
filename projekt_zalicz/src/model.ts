@@ -38,16 +38,8 @@ export interface Table{
     Capacity: number;
     Status: string;
     Order:{
-        Employee : {
-            Name: string;
-            Surename: string;
-            Position: string;
-        }
-        Dishes : [{
-            Name: string;
-            Price: number;
-            Category: string;
-        }]
+        Employee : Employee[];
+        Dishes : Dish[];
         Status: string;
         Creation_date: string;
         Bill: number; 
