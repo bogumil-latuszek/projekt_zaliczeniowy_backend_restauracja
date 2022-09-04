@@ -4,7 +4,7 @@ import {
 } from "mongo_db_data_access";
 
 import { Dish } from "model"
-import { Mongo_Dish, Mongo_Reservation } from "mongo_models"
+import { Mongo_Dish} from "mongo_models"
 import { getDishesAccess } from "data_access_selector"
 
 describe("HasDish Testing", () => {

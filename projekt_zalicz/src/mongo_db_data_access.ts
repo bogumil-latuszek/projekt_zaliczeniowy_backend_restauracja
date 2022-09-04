@@ -25,56 +25,72 @@ export async function disconnectDBForTesting() {
 
 class MongoDbReservation implements IReservationAccess {
 
-    constructor() {}
+    async HasReservation(_id:string): Promise<boolean> {
+        try {
+            let existing_doc = await Mongo_Reservation.findById(_id);
 
-    async HasReservation(id: string): Promise<boolean> {
-        const reservation = await Mongo_Reservation.findById(id).lean();
-        //if id is a string but not in a certain way this returns error not false
-        if(reservation == undefined)
-        {
+            if (existing_doc) { //doc or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
             return Promise.resolve(false);
         }
-        else 
-        {
-            return Promise.resolve(true);
+    }
+    async GetReservation(_id:string): Promise<Reservation> {
+        try {
+            let existing_doc = await Mongo_Reservation.findById(_id);
+            if (existing_doc == null) { //doc or null
+                throw new  Error("no reservation found for given id");
+            }
+            return Promise.resolve(existing_doc);
+        }
+        catch (error){
+            throw new  Error("no reservation found for given id");
+        }
+    }
+    async GetAllReservations(): Promise<Reservation[]> {
+        let reservationes: Reservation[] = await Mongo_Reservation.find()
+        return Promise.resolve(reservationes);
+    }
+
+    async AddReservation(reservation: Reservation): Promise<string> {
+        try {
+            const mongo_reservation = new Mongo_Reservation({ ...reservation });
+            const createdReservation = await mongo_reservation.save();
+            return Promise.resolve(createdReservation.id);
+        } catch (err) {
+            console.log(err);
         }
     }
 
-    async GetReservation(id: string): Promise<Reservation | undefined> {
-        return Mongo_Reservation.findOne({ id }).lean();
-    }
-    
-    async GetAllReservations(): Promise<Reservation[]>{
-        let reservations_empty = Mongo_Reservation.find({});
-        return Promise.resolve(reservations_empty);
-    }
-
-    async AddReservation(reservation:Reservation): Promise<Reservation>{
-        return Promise.resolve(reservation);//not working as intended
-    }
-
-    async UpdateReservation(reservation: Reservation): Promise<void> {
-        /*let id = reservation.id
-        let retrived_reservation = await Mongo_Reservation.findOne({ id });
-        if(retrived_reservation != undefined)
-        {
-            retrived_reservation.Client_Name = reservation.Client_Name; 
-            retrived_reservation.Time_Start = reservation.Time_Start;
-            retrived_reservation.Time_End = reservation.Time_End;
-            retrived_reservation.Table_Id = reservation.Table_Id;
-            await retrived_reservation.save();
+    async UpdateReservation(reservation:Reservation, _id:string): Promise<void> {
+        let originalReservation = await Mongo_Reservation.findOne({_id});
+        if(originalReservation != undefined){
+            originalReservation.Client_Name = reservation.Client_Name;
+            originalReservation.Table_Id = reservation.Table_Id;
+            originalReservation.Time_Start = reservation.Time_Start;
+            originalReservation.Time_End = reservation.Time_End;
+            await originalReservation.save()
         }
-        */
+        else{
+            throw new Error("no such reservation exists")}
         return Promise.resolve();
-    }
+    };
 
-    async DeleteReservation(id: string): Promise<void> {
-        let retrived_reservation = await Mongo_Reservation.findOne({ id });
-        retrived_reservation?.deleteOne({_id: id})
-        return Promise.resolve();
-    }
+    async DeleteReservation(id:string): Promise<void> {
+        try{
+            await Mongo_Reservation.findByIdAndDelete(id);
+            return Promise.resolve();
+        }
+        catch(err){
+            return Promise.resolve();
+        }
+    };
 }
-
 // ---------------- Dish
 
 class MongoDbDishes implements IDishAccess {
@@ -329,4 +345,4 @@ class MongoDbEmployees implements IEmployeeAccess {
     }
 }
 
-export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees  };
+export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees };
