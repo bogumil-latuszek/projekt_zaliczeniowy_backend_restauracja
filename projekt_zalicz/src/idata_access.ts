@@ -51,8 +51,8 @@ interface IProductAccess {
     HasProduct(id:string): Promise<boolean>;
     GetProduct(id:string): Promise<Product | undefined>;
     GetAllProducts(): Promise<Product[]>;
-    AddProduct(Product:Product): Promise<Product>;
-    UpdateProduct(Product:Product): Promise<void>;
+    AddProduct(Product:Product): Promise<string>;
+    UpdateProduct(Product:Product, id:string): Promise<void>;
     DeleteProduct(id:string): Promise<void>;
 }
 

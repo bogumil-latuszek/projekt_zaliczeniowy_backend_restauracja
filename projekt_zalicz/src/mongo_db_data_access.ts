@@ -1,9 +1,8 @@
-import { Dish, Reservation } from 'model';
-import { IReservationAccess } from 'idata_access';
+import { Dish, Reservation, Product, Restaurant, Employee, Table, Order } from 'model';
+import {  IDishAccess, IReservationAccess, IProductAccess, IRestaurantAccess, IEmployeeAccess, ITableAccess, IOrderAccess} from 'idata_access';
 import mongoose from "mongoose";
-import {Mongo_Dish, Mongo_Reservation } from 'mongo_models';
+import {Mongo_Dish, Mongo_Reservation, Mongo_Product, Mongo_Restaurant, Mongo_Employee, Mongo_Table} from 'mongo_models';
 import config from 'config';
-import { IDishAccess } from "idata_access";
 
 export async function connectDBForTesting() {
     try {
@@ -141,7 +140,68 @@ class MongoDbDishes implements IDishAccess {
     };
 }
 
-export {  MongoDbDishes };
+class MongoDbProducts implements IProductAccess {
 
+    async HasProduct(_id:string): Promise<boolean> {
+        try {
+            let existing_doc = await Mongo_Product.findById(_id);
 
-export {  MongoDbReservation};
+            if (existing_doc) { //doc or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
+    }
+    async GetProduct(_id:string): Promise<Product> {
+        try {
+            let existing_doc = await Mongo_Product.findById(_id);
+            if (existing_doc == null) { //doc or null
+                throw new  Error("no product found for given id");
+            }
+            return Promise.resolve(existing_doc);
+        }
+        catch (error){
+            throw new  Error("no product found for given id");
+        }
+    }
+    async GetAllProducts(): Promise<Product[]> {
+        let productes: Product[] = await Mongo_Product.find()
+        return Promise.resolve(productes);
+    }
+
+    async AddProduct(product: Product): Promise<string> {
+        try {
+            const mongo_product = new Mongo_Product({ ...product });
+            const createdProduct = await mongo_product.save();
+            return createdProduct.id;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async UpdateProduct(product:Product, _id:string): Promise<void> {
+        let originalProduct = await Mongo_Product.findOne({_id});
+        if(originalProduct != undefined){
+            originalProduct.Name = product.Name;
+            originalProduct.Price = product.Price;
+            originalProduct.Quantity = product.Quantity;
+            originalProduct.Measurement_Units = product.Measurement_Units;
+            await originalProduct.save()
+        }
+        else{
+            throw new Error("no such product exists")}
+        return Promise.resolve();
+    };
+
+    async DeleteProduct(id:string): Promise<void> {
+        await Mongo_Product.findByIdAndDelete(id);
+        return Promise.resolve();
+    };
+}
+
+export {  MongoDbDishes, MongoDbReservation, MongoDbProducts  };
