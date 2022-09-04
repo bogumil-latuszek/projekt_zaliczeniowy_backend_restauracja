@@ -29,8 +29,8 @@ interface ITableAccess {
     HasTable(id:string): Promise<boolean>;
     GetTable(id:string): Promise<Table | undefined>;
     GetAllTables(): Promise<Table[]>;
-    AddTable(Table:Table): Promise<Table>;
-    UpdateTable(Table:Table): Promise<void>;
+    AddTable(Table:Table): Promise<string>;
+    UpdateTable(Table:Table, id:string): Promise<void>;
     DeleteTable(id:string): Promise<void>;
     FindFreeTable(): Promise<Table | undefined>;
     //RaportTables(): Promise<Table[]>;

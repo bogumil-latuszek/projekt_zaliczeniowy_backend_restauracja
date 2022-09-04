@@ -204,4 +204,74 @@ class MongoDbProducts implements IProductAccess {
     };
 }
 
-export {  MongoDbDishes, MongoDbReservation, MongoDbProducts  };
+
+class MongoDbTables implements ITableAccess {
+
+    FindFreeTable(): Promise<Table> {
+        throw new Error('Method not implemented.');
+    }
+
+    async HasTable(_id:string): Promise<boolean> {
+        try {
+            let existing_doc = await Mongo_Table.findById(_id);
+
+            if (existing_doc) { //doc or null
+                return Promise.resolve(true);
+            }
+            else {
+                return Promise.resolve(false);
+            };
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
+    }
+    async GetTable(_id:string): Promise<Table> {
+        try {
+            let existing_doc = await Mongo_Table.findById(_id);
+            if (existing_doc == null) { //doc or null
+                throw new  Error("no table found for given id");
+            }
+            return Promise.resolve(existing_doc);
+        }
+        catch (error){
+            throw new  Error("no table found for given id");
+        }
+    }
+    async GetAllTables(): Promise<Table[]> {
+        let tablees: Table[] = await Mongo_Table.find()
+        return Promise.resolve(tablees);
+    }
+
+    async AddTable(table: Table): Promise<string> {
+        try {
+            const mongo_table = new Mongo_Table({ ...table });
+            const createdTable = await mongo_table.save();
+            return Promise.resolve(createdTable.id);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async UpdateTable(table:Table, _id:string): Promise<void> {
+        let originalTable = await Mongo_Table.findOne({_id});
+        if(originalTable != undefined){
+            originalTable.Name = table.Name;
+            originalTable.Capacity = table.Capacity;
+            originalTable.Status = table.Status;
+            originalTable.Order = table.Order;
+            await originalTable.save()
+        }
+        else{
+            throw new Error("no such table exists")}
+        return Promise.resolve();
+    };
+
+    async DeleteTable(id:string): Promise<void> {
+        await Mongo_Table.findByIdAndDelete(id);
+        return Promise.resolve();
+    };
+}
+
+
+export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables  };
