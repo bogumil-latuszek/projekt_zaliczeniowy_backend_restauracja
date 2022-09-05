@@ -1,7 +1,7 @@
 import { Dish, Reservation, Product, Restaurant, Employee, Table, Order } from 'model';
 import {  IDishAccess, IReservationAccess, IProductAccess, IRestaurantAccess, IEmployeeAccess, ITableAccess, IOrderAccess} from 'idata_access';
 import mongoose from "mongoose";
-import {Mongo_Dish, Mongo_Reservation, Mongo_Product, Mongo_Restaurant, Mongo_Employee, Mongo_Table} from 'mongo_models';
+import {Mongo_Dish, Mongo_Reservation, Mongo_Product, Mongo_Restaurant, Mongo_Employee, Mongo_Table, Mongo_Order} from 'mongo_models';
 import config from 'config';
 import { readConfigFile } from 'typescript';
 
@@ -72,7 +72,7 @@ class MongoDbReservation implements IReservationAccess {
         let originalReservation = await Mongo_Reservation.findOne({_id});
         if(originalReservation != undefined){
             originalReservation.Client_Name = reservation.Client_Name;
-            originalReservation.Table_Id = reservation.Table_Id;
+            originalReservation.TableName = reservation.TableName;
             originalReservation.Time_Start = reservation.Time_Start;
             originalReservation.Time_End = reservation.Time_End;
             await originalReservation.save()
@@ -286,7 +286,6 @@ class MongoDbTables implements ITableAccess {
             originalTable.Name = table.Name;
             originalTable.Capacity = table.Capacity;
             originalTable.Status = table.Status;
-            originalTable.Orders = table.Orders;
             await originalTable.save()
         }
         else{
@@ -426,5 +425,42 @@ class MongoDbRestaurants implements IRestaurantAccess {
 
     }
 }
+/*class MongoDbOrders implements IOrderAccess {
+    
+    async HasOrder(table_id:string, order_id:string): Promise<boolean>{
+        let mongo_table = await  Mongo_Table.findById(table_id);
+        let existing_order = mongo_table.Orders.find((order)=>(order._id == order_id ))
+        if(existing_order != undefined){
+            return Promise.resolve(true)
+        }
+        else{
+            return Promise.resolve(false)
+        }
+        
+    }
+    async GetOrder(table_id:string, order_id:string): Promise<Order | undefined>{
+        throw new Error('Method not implemented.');
+    }
+    async GetAllOrders(): Promise<Order[]>{
+        throw new Error('Method not implemented.');
+    }
+    async AddOrder(table_id:string, order:Order): Promise<string>{
+       let mongo_table = await  Mongo_Table.findById(table_id);
+       order.Table_Id = table_id;
+       const mongo_order = new Mongo_Order({ ...order });
+       const createdOrder = await mongo_order.save();
+       mongo_table.Orders.push(createdOrder);
+       mongo_table.save();
 
-export {  MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbRestaurants};
+       return Promise.resolve(createdOrder.id)
+    
+
+    }
+    async UpdateOrder(table_id:string, order_id:string, Order:Order): Promise<void>{
+        throw new Error('Method not implemented.');
+    }
+    async DeleteOrder(table_id:string, order_id:string): Promise<void>{
+        throw new Error('Method not implemented.');
+    }
+}*/
+export { MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbRestaurants};
