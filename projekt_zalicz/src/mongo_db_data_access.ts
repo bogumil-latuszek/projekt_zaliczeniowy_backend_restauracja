@@ -425,42 +425,74 @@ class MongoDbRestaurants implements IRestaurantAccess {
 
     }
 }
-/*class MongoDbOrders implements IOrderAccess {
-    
-    async HasOrder(table_id:string, order_id:string): Promise<boolean>{
-        let mongo_table = await  Mongo_Table.findById(table_id);
-        let existing_order = mongo_table.Orders.find((order)=>(order._id == order_id ))
-        if(existing_order != undefined){
-            return Promise.resolve(true)
-        }
-        else{
-            return Promise.resolve(false)
-        }
-        
-    }
-    async GetOrder(table_id:string, order_id:string): Promise<Order | undefined>{
-        throw new Error('Method not implemented.');
-    }
-    async GetAllOrders(): Promise<Order[]>{
-        throw new Error('Method not implemented.');
-    }
-    async AddOrder(table_id:string, order:Order): Promise<string>{
-       let mongo_table = await  Mongo_Table.findById(table_id);
-       order.Table_Id = table_id;
-       const mongo_order = new Mongo_Order({ ...order });
-       const createdOrder = await mongo_order.save();
-       mongo_table.Orders.push(createdOrder);
-       mongo_table.save();
 
-       return Promise.resolve(createdOrder.id)
+class MongoDbOrders implements IOrderAccess {
     
-
+    async HasOrder(order_id: string): Promise<boolean> {
+        try {
+            let existing_order = await Mongo_Order.findById(order_id);
+            if (existing_order == null) { // order or null
+                return Promise.resolve(false);
+            }
+            return Promise.resolve(true);
+        }
+        catch (error){
+            return Promise.resolve(false);
+        }
     }
-    async UpdateOrder(table_id:string, order_id:string, Order:Order): Promise<void>{
-        throw new Error('Method not implemented.');
+    async GetOrder(order_id: string): Promise<Order | undefined> { // null
+        try {
+            let existing_order = await Mongo_Order.findById(order_id);
+            if (existing_order == null) { // order or null
+                return Promise.resolve(undefined); //null
+            }
+            return Promise.resolve(existing_order);
+        }
+        catch (error){
+            return Promise.resolve(undefined);
+        }
     }
-    async DeleteOrder(table_id:string, order_id:string): Promise<void>{
-        throw new Error('Method not implemented.');
+    async GetAllOrders(): Promise<Order[]> {
+        let orders: Order[] = await Mongo_Order.find()
+        return Promise.resolve(orders);
     }
-}*/
-export { MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbRestaurants};
+    async GetOrdersForTable(table_name: string): Promise<Order[]> {
+        let orders4table: Order[] = await Mongo_Order.find({TableName: table_name})
+        return Promise.resolve(orders4table);
+    }
+    async GetOrdersTakenByEmployee(employee_id: string): Promise<Order[]> {
+        let orders_by_employee: Order[] = await Mongo_Order.find({EmployeeID: employee_id})
+        return Promise.resolve(orders_by_employee);
+    }
+    async AddOrder(order:Order): Promise<string> {
+        const mongo_order = new Mongo_Order({ ...order });
+        const createdOrder = await mongo_order.save();
+        return Promise.resolve(createdOrder.id); 
+    }
+    async UpdateOrder(order_id: string, order: Order): Promise<void> {
+        let originalOrder = await Mongo_Order.findById(order_id);
+        if (originalOrder != null) {
+            originalOrder.TableName = order.TableName;
+            originalOrder.EmployeeID = order.EmployeeID;
+            originalOrder.DishesNames = order.DishesNames;
+            originalOrder.Status = order.Status;
+            originalOrder.Creation_date = order.Creation_date;
+            originalOrder.Bill = order.Bill;
+            await originalOrder.save()
+        }
+        else {
+            throw new Error("no such order exists")
+        }
+        return Promise.resolve();
+    }
+    async DeleteOrder(order_id: string): Promise<void> {
+        try {
+            await Mongo_Order.findByIdAndDelete(order_id);
+            return Promise.resolve();
+        }
+        catch(err) {
+            return Promise.resolve();
+        }
+    }
+}
+export { MongoDbDishes, MongoDbReservation, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbRestaurants, MongoDbOrders};

@@ -1,11 +1,11 @@
 import { connectDBForTesting, disconnectDBForTesting,} from "mongo_db_data_access";
 
-import { Dish } from "model"
-import { Mongo_Dish} from "mongo_models"
-import { getDishesAccess } from "data_access_selector"
+import { Order } from "model"
+import { Mongo_Order} from "mongo_models"
+import { getOrdersAccess } from "data_access_selector"
 
 describe("HasOrder Testing", () => {
-    let db_dish = getDishesAccess();
+    let db_order = getOrdersAccess();
 
     beforeAll(async () => {
         await connectDBForTesting();
@@ -17,7 +17,7 @@ describe("HasOrder Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Dish.collection.drop();
+            await Mongo_Order.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -27,37 +27,39 @@ describe("HasOrder Testing", () => {
         }
     });
 
-    test('HasDish returns false when asked for non existant id', async () =>{
+    test('HasOrder returns false when asked for non existant id', async () => {
         //act
-        let result = await db_dish.HasDish("56e6dd2eb4494ed008d595bd");
+        let result = await db_order.HasOrder("56e6dd2eb4494ed008d595bd");
         //assert
         expect(result).toEqual(false);
     });
 
-    test('HasDish returns false when asked for id with wrong structure', async () =>{
+    test('HasOrder returns false when asked for id with wrong structure', async () => {
         //act
-        let result = await db_dish.HasDish("wrong");
+        let result = await db_order.HasOrder("wrong");
         //assert
         expect(result).toEqual(false);
     });
 
-    test('HasDish returns true when asked for existing id', async () =>{
+    test('HasOrder returns true when asked for existing id', async () =>{
         // assume
-        let new_dish = {
-            Name: "pierogi", 
-            Price: 17,
-            Category: "dania główne"
-        }
-        let new_dish_id  = await db_dish.AddDish(new_dish);
+        const new_order: Order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order_id  = await db_order.AddOrder(new_order);
         // act
-        let result = await db_dish.HasDish(new_dish_id);
+        let result = await db_order.HasOrder(new_order_id);
         // assert
         expect(result).toEqual(true);
     });
 });
 
-describe("GetDish Testing", () => {
-    let db_dish = getDishesAccess();
+describe("GetOrder Testing", () => {
+    let db_order = getOrdersAccess();
 
     beforeAll(async () => {
         await connectDBForTesting();
@@ -69,7 +71,7 @@ describe("GetDish Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Dish.collection.drop();
+            await Mongo_Order.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -79,51 +81,47 @@ describe("GetDish Testing", () => {
         }
     });
 
-    test('GetDish returns existing dish when given its id', async () =>{
+    test('GetOrder returns existing dish when given its id', async () => {
         // assume
-        let new_dish = {
-            Name: "pierogi", 
-            Price: 17,
-            Category: "dania główne"
-        }
-        let new_dish_id  = await db_dish.AddDish(new_dish);
+        const new_order: Order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
+        };
+        let new_order_id  = await db_order.AddOrder(new_order);
         // act
-        let result = await db_dish.GetDish(new_dish_id);
+        let result = await db_order.GetOrder(new_order_id);
         // assert
         expect(result).toBeDefined();
         expect(result).toHaveProperty("id");
-        expect(result.Category).toEqual(new_dish.Category);
-        expect(result.Name).toEqual(new_dish.Name);
-        expect(result.Price).toEqual(new_dish.Price);
+        expect(result.TableName).toEqual(new_order.TableName);
+        expect(result.EmployeeID).toEqual(new_order.EmployeeID);
+        expect(result.DishesNames).toEqual(new_order.DishesNames);
+        expect(result.Status).toEqual(new_order.Status);
+        expect(result.Creation_date).toEqual(new_order.Creation_date);
+        expect(result.Bill).toEqual(new_order.Bill);
     });
 
-    test('GetDish throws error when given id of nonexisting dish', async () =>{
-        try{
-            //act
-            let result = await db_dish.GetDish("56e6dd2eb4494ed008d595bd");
-        }
-        catch (err) {
-            //assert
-            expect(err.message).toEqual("no dish found for given id");
-        }
-        
+    test('GetOrder returns undefined when given id of nonexisting dish', async () => {
+        //act
+        let result = await db_order.GetOrder("56e6dd2eb4494ed008d595bd");
+        //assert
+        expect(result).toEqual(undefined);
     });
 
-    test('GetDish throws error when given id in inappropriate format', async () =>{
-        try{
-            //act
-            let result = await db_dish.GetDish("wrong format");
-        }
-        catch (err) {
-            //assert
-            expect(err.message).toEqual("no dish found for given id");
-        }
-        
+    test('GetOrder returns undefined when given id in inappropriate format', async () =>{
+        //act
+        let result = await db_order.GetOrder("wrong format");
+        //assert
+        expect(result).toEqual(undefined); 
     });
 });
 
-describe("GetAllDishes Testing", () => {
-    let db_dish = getDishesAccess();
+describe("Get Orders Testing", () => {
+    let db_order = getOrdersAccess();
 
     beforeAll(async () => {
         await connectDBForTesting();
@@ -135,7 +133,7 @@ describe("GetAllDishes Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Dish.collection.drop();
+            await Mongo_Order.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -145,39 +143,132 @@ describe("GetAllDishes Testing", () => {
         }
     });
 
-    test('GetAllDishes returns all existing dishes', async () =>{
+    test('GetAllOrders returns all existing orders', async () =>{
         // assume
-        let new_dish1 = {
-            Name: "pierogi", 
-            Price: 17,
-            Category: "dania główne"
+        let new_order1 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
         }
-        let new_dish1_id  = await db_dish.AddDish(new_dish1);
-        let new_dish2 = {
-            Name: "ogórkowa", 
-            Price: 8,
-            Category: "zupy"
+        let new_order1_id  = await db_order.AddOrder(new_order1);
+        let new_order2 = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-04",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
         }
-        let new_dish2_id  = await db_dish.AddDish(new_dish2);
+        let new_order2_id  = await db_order.AddOrder(new_order2);
         // act
-        let result = await db_dish.GetAllDishes();
+        let result = await db_order.GetAllOrders();
         // assert
         expect(result).toBeDefined();
         expect(result.length).toEqual(2);
         expect(result[0]).not.toEqual(result[1]);
     });
 
-    test('GetAllDishes returns empty array when there arent any dishes', async () =>{
+    test('GetOrdersForTable returns all orders for table', async () => {
+        // assume
+        let new_order1 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
+        }
+        let new_order1_id  = await db_order.AddOrder(new_order1);
+        let order1  = await db_order.GetOrder(new_order1_id);
+        let new_order2 = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-04",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
+        }
+        let new_order2_id  = await db_order.AddOrder(new_order2);
+        let order2  = await db_order.GetOrder(new_order2_id);
+        let new_order3 = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-04",
+            DishesNames: ["rosół", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 120
+        }
+        let new_order3_id  = await db_order.AddOrder(new_order3);
+        let order3  = await db_order.GetOrder(new_order3_id);
         // act
-        let result = await db_dish.GetAllDishes();
+        let result = await db_order.GetOrdersForTable("stolik_04");
+        // assert
+        expect(result).toBeDefined();
+        expect(result.length).toEqual(2);
+        expect(result[0]).not.toEqual(result[1]);
+        expect(result).not.toContainEqual(order1);
+        expect(result).toContainEqual(order2);
+        expect(result).toContainEqual(order3);
+    });
+
+    test('GetOrdersTakenByEmployee returns all orders taken by given waiter', async () => {
+        // assume
+        let new_order1 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-04",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+            Bill: 124
+        }
+        let new_order1_id  = await db_order.AddOrder(new_order1);
+        let order1  = await db_order.GetOrder(new_order1_id);
+        let new_order2 = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-04",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 11:30",
+            Bill: 124
+        }
+        let new_order2_id  = await db_order.AddOrder(new_order2);
+        let order2  = await db_order.GetOrder(new_order2_id);
+        let new_order3 = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-03",
+            DishesNames: ["rosół", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 09:30",
+            Bill: 120
+        }
+        let new_order3_id  = await db_order.AddOrder(new_order3);
+        let order3  = await db_order.GetOrder(new_order3_id);
+        // act
+        let result = await db_order.GetOrdersTakenByEmployee("KEL-04");
+        // assert
+        expect(result).toBeDefined();
+        expect(result.length).toEqual(2);
+        expect(result[0]).not.toEqual(result[1]);
+        expect(result).toContainEqual(order1);
+        expect(result).toContainEqual(order2);
+        expect(result).not.toContainEqual(order3);
+    });
+
+    test('GetAllOrders returns empty array when there arent any dishes', async () => {
+        // act
+        let result = await db_order.GetAllOrders();
         // assert
         expect(result).toBeDefined();
         expect(result.length).toEqual(0);
     });
 });
 
-describe("AddDish Testing", () => {
-    let db_dish = getDishesAccess();
+
+describe("AddOrder Testing", () => {
+    let db_order = getOrdersAccess();
 
     beforeAll(async () => {
         await connectDBForTesting();
@@ -189,7 +280,7 @@ describe("AddDish Testing", () => {
 
     afterEach(async () => {
         try {
-            await Mongo_Dish.collection.drop();
+            await Mongo_Order.collection.drop();
         }
         catch (err) {
             // ignore exception thrown from dropping nonexistent collection
@@ -199,18 +290,20 @@ describe("AddDish Testing", () => {
         }
     });
 
-    test('AddDish returns id of newly created dish', async () => {
+    test('AddOrder returns id of newly created order', async () => {
         //assume
-        const sprite: Dish = {
-            Name: "Sprite",
-            Price: 7.10,
-            Category: "drink",
+        const order_77: Order = {
+            TableName: "stolik_01",
+            EmployeeID: "KEL-07",
+            DishesNames: ["pomidorowa", "schabowy-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
         };
-        const dishDataAccess = getDishesAccess();
+        const orderDataAccess = getOrdersAccess();
         //act
-        const createdDish_id = await dishDataAccess.AddDish(sprite);
+        const createdOrder_id = await orderDataAccess.AddOrder(order_77);
         //assert
-        expect(createdDish_id).toBeDefined();
+        expect(createdOrder_id).toBeDefined();
     });
 
 });
