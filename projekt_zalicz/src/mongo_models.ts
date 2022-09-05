@@ -27,7 +27,7 @@ const OrderSchema = new Schema<Order>({
     DishesNames : {type: [String], required: true},
     Status: {type: String, required: true}, //could use enum
     Creation_date: {type: String, required: true},
-    Bill: {type: Number, required: true}
+    Bill: {type: Number, required: false}
 })
 
 const TableSchema = new Schema<Table>({

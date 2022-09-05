@@ -28,7 +28,7 @@ export interface Order{
     DishesNames: string[];
     Status: string;
     Creation_date: string;
-    Bill: number; 
+    Bill?: number; 
 }
 
 export interface Table{
