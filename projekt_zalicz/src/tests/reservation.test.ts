@@ -47,7 +47,7 @@ describe("HasReservation Testing", () => {
     test('HasReservation returns true when asked for existing id', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_01",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -86,7 +86,7 @@ describe("GetReservation Testing", () => {
     test('GetReservation returns existing reservation when given its id', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_02",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -97,7 +97,7 @@ describe("GetReservation Testing", () => {
         // assert
         expect(result).toBeDefined();
         expect(result).toHaveProperty("id");
-        expect(result.Table_Id).toEqual(new_reservation.Table_Id);
+        expect(result.TableName).toEqual(new_reservation.TableName);
         expect(result.Time_Start).toEqual(new_reservation.Time_Start);
         expect(result.Time_End).toEqual(new_reservation.Time_End);
         expect(result.Client_Name).toEqual(new_reservation.Client_Name);
@@ -154,14 +154,14 @@ describe("GetAllReservations Testing", () => {
     test('GetAllReservations returns all existing reservationes', async () =>{
         // assume
         let new_reservation1 = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_01",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
         }
         let new_reservation1_id  = await db_reservation.AddReservation(new_reservation1);
         let new_reservation2 = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_02",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -210,7 +210,7 @@ describe("AddReservation Testing", () => {
     test('AddReservation returns id of newly created reservation', async () => {
         //assume
         const sprite: Reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_01",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -225,7 +225,7 @@ describe("AddReservation Testing", () => {
     test('AddReservation returns valid id when given object that is a Reservation', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_02",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -235,7 +235,7 @@ describe("AddReservation Testing", () => {
         let new_reservation_in_db = await db_reservation.GetReservation(new_reservation_id);
         // assert
         expect(new_reservation_in_db).toBeDefined();
-        expect(new_reservation_in_db.Table_Id).toEqual(new_reservation.Table_Id);
+        expect(new_reservation_in_db.TableName).toEqual(new_reservation.TableName);
         expect(new_reservation_in_db.Time_Start).toEqual(new_reservation.Time_Start);
         expect(new_reservation_in_db.Time_End).toEqual(new_reservation.Time_End);
         expect(new_reservation_in_db.Client_Name).toEqual(new_reservation.Client_Name);
@@ -244,7 +244,7 @@ describe("AddReservation Testing", () => {
     test('AddReservation returns valid id when given object that is a Reservation but has more fields', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_03",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan",
@@ -256,7 +256,7 @@ describe("AddReservation Testing", () => {
         let new_reservation_in_db = await db_reservation.GetReservation(new_reservation_id);
         // assert
         expect(new_reservation_in_db).toBeDefined();
-        expect(new_reservation_in_db.Table_Id).toEqual(new_reservation.Table_Id);
+        expect(new_reservation_in_db.TableName).toEqual(new_reservation.TableName);
         expect(new_reservation_in_db.Time_Start).toEqual(new_reservation.Time_Start);
         expect(new_reservation_in_db.Time_End).toEqual(new_reservation.Time_End);
         expect(new_reservation_in_db.Client_Name).toEqual(new_reservation.Client_Name);
@@ -290,14 +290,14 @@ describe("UpdateReservation Testing", () => {
     test('UpdateReservation updates reservation in db when given id of existing reservation', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_01",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
         }
         let new_reservation_id  = await db_reservation.AddReservation(new_reservation);
         let newer_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d594cc",
+            TableName : "stolik_01",
             Time_Start : "2019-12-10T13:45:00.000",
             Time_End : "2019-12-10T15:00:00.000",
             Client_Name : "paweł"
@@ -307,16 +307,16 @@ describe("UpdateReservation Testing", () => {
         let second_reservation_in_db = await db_reservation.GetReservation(new_reservation_id);
         // assert
         expect(second_reservation_in_db).toBeDefined();
-        expect(second_reservation_in_db.Table_Id).toEqual("56e6dd2eb4494ed008d594cc");
-        expect(second_reservation_in_db.Time_Start).toEqual("2019-12-10T13:45:00.000");
-        expect(second_reservation_in_db.Time_End).toEqual("2019-12-10T15:00:00.000");
-        expect(second_reservation_in_db.Client_Name).toEqual("paweł");
+        expect(second_reservation_in_db.TableName).toEqual(newer_reservation.TableName);
+        expect(second_reservation_in_db.Time_Start).toEqual(newer_reservation.Time_Start);
+        expect(second_reservation_in_db.Time_End).toEqual(newer_reservation.Time_End);
+        expect(second_reservation_in_db.Client_Name).toEqual(newer_reservation.Client_Name);
     });
 
     test('UpdateReservation throws error when given id of nonexisting reservation', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_05",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -336,7 +336,7 @@ describe("UpdateReservation Testing", () => {
     test('UpdateReservation throws error when given id with incorrect type', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_06",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -380,7 +380,7 @@ describe("DeleteReservation Testing", () => {
     test('DeleteReservation deletes reservation in db when given id of existing reservation', async () =>{
         // assume
         let new_reservation = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_09",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
@@ -396,14 +396,14 @@ describe("DeleteReservation Testing", () => {
     test('DeleteReservation doesnt change db at all when given id of nonexisting reservation, and doesnt throw any errors', async () =>{
         //assume
         let new_reservation1 = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_10",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
         }
         let new_reservation1_id  = await db_reservation.AddReservation(new_reservation1);
         let new_reservation2 = {
-            Table_Id : "56e6dd2eb4494ed008d594cc",
+            TableName : "stolik_11",
             Time_Start : "2019-12-10T13:45:00.000",
             Time_End : "2019-12-10T15:00:00.000",
             Client_Name : "paweł"
@@ -423,14 +423,14 @@ describe("DeleteReservation Testing", () => {
     test('DeleteReservation doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
         //assume
         let new_reservation1 = {
-            Table_Id : "56e6dd2eb4494ed008d595bd",
+            TableName : "stolik_12",
             Time_Start : "2018-12-10T13:45:00.000",
             Time_End : "2018-12-10T15:00:00.000",
             Client_Name : "jan"
         }
         let new_reservation1_id  = await db_reservation.AddReservation(new_reservation1);
         let new_reservation2 = {
-            Table_Id : "56e6dd2eb4494ed008d594cc",
+            TableName : "stolik_13",
             Time_Start : "2019-12-10T13:45:00.000",
             Time_End : "2019-12-10T15:00:00.000",
             Client_Name : "paweł"
