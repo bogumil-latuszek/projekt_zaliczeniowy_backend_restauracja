@@ -41,6 +41,8 @@ interface IOrderAccess {
     HasOrder(order_id:string): Promise<boolean>;
     GetOrder(order_id:string): Promise<Order | undefined>;
     GetAllOrders(): Promise<Order[]>;
+    GetOrdersForTable(table_name: string): Promise<Order[]>;
+    GetOrdersTakenByEmployee(employee_id: string): Promise<Order[]>;
     AddOrder(order:Order): Promise<string>;
     UpdateOrder(order_id:string, order:Order): Promise<void>;
     DeleteOrder(order_id:string): Promise<void>;
