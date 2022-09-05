@@ -4,7 +4,7 @@ import {
 } from "mongo_db_data_access";
 
 import { Table } from "model"
-import { Mongo_Table, Mongo_Reservation } from "mongo_models"
+import { Mongo_Table } from "mongo_models"
 import { getTablesAccess } from "data_access_selector"
 
 describe("HasTable Testing", () => {
@@ -51,31 +51,6 @@ describe("HasTable Testing", () => {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
         }
         let new_table_id  = await db_table.AddTable(new_table1);
         // act
@@ -114,32 +89,7 @@ describe("GetTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table_id  = await db_table.AddTable(new_table1);
         // act
@@ -150,7 +100,6 @@ describe("GetTable Testing", () => {
         expect(result.Name).toEqual(new_table1.Name);
         expect(result.Capacity).toEqual(new_table1.Capacity);
         expect(result.Status).toEqual(new_table1.Status);
-        //expect(result.Orders).toEqual(new_table.Orders); //they are different becouse nested objects get assigned id-s too
     });
 
     test('GetTable throws error when given id of nonexisting table', async () =>{
@@ -207,64 +156,14 @@ describe("GetAllTablees Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
         let new_table2 : Table = 
         {
-            Name: "stolik1", 
-            Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Name: "stolik2", 
+            Capacity: 3,
+            Status: "wolny"
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         // act
@@ -313,32 +212,7 @@ describe("AddTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         const tableDataAccess = getTablesAccess();
         //act
@@ -353,32 +227,7 @@ describe("AddTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         // act
         let new_table_id  = await db_table.AddTable(new_table1);
@@ -388,7 +237,6 @@ describe("AddTable Testing", () => {
         expect(new_table_in_db.Name).toEqual(new_table1.Name);
         expect(new_table_in_db.Capacity).toEqual(new_table1.Capacity);
         expect(new_table_in_db.Status).toEqual(new_table1.Status);
-        //expect(new_table_in_db.Orders).toEqual(new_table.Orders);//they are different becouse nested objects get assigned id-s too
     });
 
     test('AddTable returns valid id when given object that is a Table but has more fields', async () =>{
@@ -398,31 +246,6 @@ describe("AddTable Testing", () => {
             Name: "stolik1", 
             Capacity: 5,
             Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
         }
         // act
         let new_table_id  = await db_table.AddTable(new_table1);
@@ -466,64 +289,14 @@ describe("UpdateTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table_id  = await db_table.AddTable(new_table);
         let newer_table : Table = 
         {
             Name: "stolik2", 
             Capacity: 2,
-            Status: "wolny",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "wolny"
         }
         // act
         await db_table.UpdateTable(newer_table, new_table_id);
@@ -533,7 +306,6 @@ describe("UpdateTable Testing", () => {
         expect(second_table_in_db.Name).toEqual("stolik2");
         expect(second_table_in_db.Capacity).toEqual(2);
         expect(second_table_in_db.Status).toEqual("wolny");
-        //expect(new_table_in_db.Orders).toEqual(new_table.Orders);//they are different becouse nested objects get assigned id-s too
     });
 
     test('UpdateTable throws error when given id of nonexisting table', async () =>{
@@ -542,32 +314,7 @@ describe("UpdateTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let error = new Error("nothing for now")
         // act
@@ -587,32 +334,7 @@ describe("UpdateTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         // act
         try{
@@ -656,32 +378,7 @@ describe("DeleteTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table_id  = await db_table.AddTable(new_table);
         // act
@@ -697,64 +394,14 @@ describe("DeleteTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
         let new_table2 : Table = 
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         let result1 = await db_table.GetAllTables();
@@ -773,64 +420,14 @@ describe("DeleteTable Testing", () => {
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table1_id  = await db_table.AddTable(new_table1);
         let new_table2 : Table = 
         {
             Name: "stolik1", 
             Capacity: 5,
-            Status: "zajęty",
-            Orders: 
-            [{
-                Table_Id: "saaskfl;lkfaj;fjaskjksaa",
-                _Employee : 
-                {
-                    Name: "jan",
-                    Surename: "kowalski",
-                    Position: "kelner"
-                },
-                Dishes : 
-                [{
-                    Name: "grochówka",
-                    Price: 16,
-                    Category: "zupy"
-                },
-                {
-                    Name: "kotlet z ziemniakami",
-                    Price: 34,
-                    Category: "dania główne"
-                }],
-                Status: "oczekujący",
-                Creation_date: "2018-12-10T13:45:00.000",
-                Bill: 50
-            }]
-    
+            Status: "zajęty"
         }
         let new_table2_id  = await db_table.AddTable(new_table2);
         let result1 = await db_table.GetAllTables();
