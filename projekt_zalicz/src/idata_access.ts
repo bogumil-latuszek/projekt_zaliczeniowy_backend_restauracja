@@ -38,13 +38,12 @@ interface ITableAccess {
 }
 
 interface IOrderAccess {
-    HasOrder(id:string): Promise<boolean>;
-    GetOrder(id:string): Promise<Order | undefined>;
+    HasOrder(order_id:string): Promise<boolean>;
+    GetOrder(order_id:string): Promise<Order | undefined>;
     GetAllOrders(): Promise<Order[]>;
-    AddOrder(Order:Order): Promise<Order>;
-    UpdateOrder(Order:Order): Promise<void>;
-    DeleteOrder(id:string): Promise<void>;
-    FindFreeOrder(): Promise<Order | undefined>;
+    AddOrder(order:Order): Promise<string>;
+    UpdateOrder(order_id:string, order:Order): Promise<void>;
+    DeleteOrder(order_id:string): Promise<void>;
     //RaportOrders(): Promise<Order[]>;
 }
 
