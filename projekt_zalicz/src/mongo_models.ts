@@ -2,7 +2,7 @@ import { Schema, model, Model } from 'mongoose';
 import {Employee, Restaurant, Reservation, Table, Product, Dish, Order} from './model';
 
 const ReservationSchema = new Schema<Reservation> ({
-    Table_Id : {type: String, required: true},
+    TableName : {type: String, required: true},
     Time_Start :  {type: String, required: true},
     Time_End :  {type: String, required: true},
     Client_Name :  {type: String, required: true},
@@ -22,9 +22,9 @@ const DishSchema = new Schema<Dish>({
 })
 
 const OrderSchema = new Schema<Order>({
-    Table_Id : {type: String, required: true},
-    _Employee : {type: EmployeeSchema, required: true},
-    Dishes : {type: [DishSchema], required: true},
+    TableName : {type: String, required: true},
+    EmployeeID : {type: String, required: true},
+    DishesNames : {type: [String], required: true},
     Status: {type: String, required: true}, //could use enum
     Creation_date: {type: String, required: true},
     Bill: {type: Number, required: true}
@@ -33,8 +33,7 @@ const OrderSchema = new Schema<Order>({
 const TableSchema = new Schema<Table>({
     Name: {type: String, required: false},
     Capacity: {type: Number, required: true},
-    Status: {type: String, required: true}, //could use enum
-    Orders: [OrderSchema]
+    Status: {type: String, required: true} //could use enum
 })
 
 const RestaurantSchema = new Schema<Restaurant> ({
@@ -59,5 +58,6 @@ const Mongo_Dish: Model<Dish> = model<Dish>('Dish', DishSchema);
 const Mongo_Table: Model<Table> = model<Table>('Table', TableSchema);
 const Mongo_Restaurant: Model<Restaurant> = model<Restaurant>('Restaurant', RestaurantSchema);
 const Mongo_Product: Model<Product> = model<Product>('Product', ProductSchema);
+const Mongo_Order: Model<Order> = model<Order>('Order', OrderSchema);
 
-export {Mongo_Reservation, Mongo_Employee, Mongo_Dish, Mongo_Table, Mongo_Restaurant, Mongo_Product}
+export {Mongo_Reservation, Mongo_Employee, Mongo_Dish, Mongo_Table, Mongo_Restaurant, Mongo_Product, Mongo_Order}
