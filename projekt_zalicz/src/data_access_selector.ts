@@ -3,11 +3,29 @@
    (curently we have only MongoDB data access)
 */
 import { IDishAccess, IProductAccess, ITableAccess, IEmployeeAccess, IReservationAccess, IRestaurantAccess, IOrderAccess} from "idata_access"
-import { MongoDbDishes, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbReservation, MongoDbRestaurants, MongoDbOrders} from "mongo_db_data_access"
+import { MongoDbDishes, MongoDbProducts, MongoDbTables, MongoDbEmployees, MongoDbReservation, MongoDbRestaurants, MongoDbOrders, connectDB, disconnectDB} from "mongo_db_data_access"
 import config from 'config';
 
 let selectedDataStorage = config.DATA_STORAGE_VARIANT;
 
+
+export async function initDataAccess() {
+    if (selectedDataStorage == "mongodb") {
+        await connectDB();
+    }
+    else{
+        throw new Error(`${selectedDataStorage} is not a valid storage variant`);
+    }
+}
+
+export function dropDataAccess() {
+    if (selectedDataStorage == "mongodb"){
+        disconnectDB();
+    }
+    else{
+        throw new Error(`${selectedDataStorage} is not a valid storage variant`);
+    }
+}
 
 export function getDishesAccess(): IDishAccess {
     if (selectedDataStorage == "mongodb"){

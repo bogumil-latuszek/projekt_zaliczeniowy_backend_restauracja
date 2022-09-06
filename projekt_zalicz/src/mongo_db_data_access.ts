@@ -5,6 +5,32 @@ import {Mongo_Dish, Mongo_Reservation, Mongo_Product, Mongo_Restaurant, Mongo_Em
 import config from 'config';
 import { readConfigFile } from 'typescript';
 
+
+
+let db_connection;
+
+export async function connectDB() {
+    try {
+        db_connection = await mongoose.connect(config.MONGO_URI);
+        console.log("MongoDB connected");
+    } catch (error) {
+        console.log("MongoDB connect error");
+    }
+}
+
+export function disconnectDB() {
+    try {
+        //await mongoose.connection.close();
+        if (db_connection) {
+            db_connection.disconnect();
+            db_connection = null;
+        }
+        console.log("MongoDB disconnected");
+    } catch (error) {
+        console.log("MongoDB disconnect error");
+    }
+}
+
 export async function connectDBForTesting() {
     try {
         await mongoose.connect(config.MONGO_TEST_URI);
