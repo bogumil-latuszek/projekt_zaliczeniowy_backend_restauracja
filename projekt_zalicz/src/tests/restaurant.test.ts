@@ -395,17 +395,33 @@ describe("DeleteRestaurant Testing", () => {
         expect(restaurant2_exists).toEqual(true);
     });
 
-    test('DeleteRestaurant throws error when given id with incorrect type', async () => {
-        // assume
-        let error = new Error("nothing for now")
+    test('DeleteRestaurant doesnt change db at all when given id with wrong structure', async () => {
+        //assume
+        let new_restaurant1 = {
+            Name: "Dyniarnia",
+            Address: "Lanckorona Rynek 100",
+            Phone: "699-123-456",
+            nip: "678-333-22-11",
+            email: "biuro@dyniarnia.pl",
+            website: "www.dyniarnia.pl",
+        }
+        let new_restaurant1_id  = await db_restaurant.AddRestaurant(new_restaurant1);
+        let new_restaurant2 = {
+            Name: "Dyniarnia2",
+            Address: "Lanckorona Rynek 110",
+            Phone: "699-123-457",
+            nip: "678-333-22-12",
+            email: "biuro@dyniarnia2.pl",
+            website: "www.dyniarnia2.pl",
+        }
+        let new_restaurant2_id  = await db_restaurant.AddRestaurant(new_restaurant2);
         // act
-        try {
-            await db_restaurant.DeleteRestaurant("wrong")
-        }
-        catch(err) {
-            error.message = err.message;
-        }
+        await db_restaurant.DeleteRestaurant("56e6dd2eb4494ed008d595bd")
         // assert
-        expect(error.message).toEqual("Cast to ObjectId failed for value \"wrong\" (type string) at path \"_id\" for model \"Restaurant\"");
+        let restaurant1_exists = await db_restaurant.HasRestaurant(new_restaurant1_id);
+        let restaurant2_exists = await db_restaurant.HasRestaurant(new_restaurant2_id);
+        expect(restaurant1_exists).toEqual(true);
+        expect(restaurant2_exists).toEqual(true);
     });
+
 });
