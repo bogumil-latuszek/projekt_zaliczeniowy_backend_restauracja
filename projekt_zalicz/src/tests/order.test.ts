@@ -306,4 +306,197 @@ describe("AddOrder Testing", () => {
         expect(createdOrder_id).toBeDefined();
     });
 
+
+});
+
+describe("UpdateOrder Testing", () => {
+    let db_order = getOrdersAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Order.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('UpdateOrder updates order in db when given id of existing order', async () =>{
+        // assume
+        let new_order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order_id  = await db_order.AddOrder(new_order);
+        let newer_order = {
+            TableName: "stolik_04",
+            EmployeeID: "KEL-04",
+            DishesNames: ["panacotta"],
+            Status: "wydany",
+            Creation_date: "2022-09-05 10:30",
+        };
+        // act
+        await db_order.UpdateOrder(new_order_id, newer_order );
+        let second_order_in_db = await db_order.GetOrder(new_order_id);
+        // assert
+        expect(second_order_in_db).toBeDefined();
+        expect(second_order_in_db.TableName).toEqual("stolik_04");
+        expect(second_order_in_db.EmployeeID).toEqual("KEL-04");
+        expect(second_order_in_db.DishesNames).toEqual(["panacotta"]);
+        expect(second_order_in_db.Status).toEqual("wydany");
+        expect(second_order_in_db.Creation_date).toEqual("2022-09-05 10:30");
+    });
+
+    test('UpdateOrder throws error when given id of nonexisting order', async () =>{
+        // assume
+        let new_order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let error = new Error("nothing for now")
+        // act
+        try{
+            await db_order.UpdateOrder("56e6dd2eb4494ed008d595bd", new_order)
+        }
+        catch(err) {
+            error.message = err.message;
+        }
+        // assert
+        expect(error.message).toEqual("no such order exists");
+    });
+
+    test('UpdateOrder throws error when given id with incorrect type', async () =>{
+        // assume
+        let new_order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        // act
+        try{
+            await db_order.UpdateOrder("wrong type", new_order)
+        }
+        catch(err) {
+            // assert
+            expect(err.message).toEqual("Cast to ObjectId failed for value \"wrong type\" (type string) at path \"_id\" for model \"Order\"");
+        }
+    });
+
+
+});
+
+describe("DeleteOrder Testing", () => {
+    let db_order = getOrdersAccess();
+
+    beforeAll(async () => {
+        await connectDBForTesting();
+    });
+    
+    afterAll(async () => {
+        await disconnectDBForTesting();
+    });
+
+    afterEach(async () => {
+        try {
+            await Mongo_Order.collection.drop();
+        }
+        catch (err) {
+            // ignore exception thrown from dropping nonexistent collection
+            if (err.message !== 'ns not found') {
+                throw err;
+            }
+        }
+    });
+
+    test('DeleteOrder deletes order in db when given id of existing order', async () =>{
+        // assume
+        let new_order = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order_id  = await db_order.AddOrder(new_order);
+        // act
+        await db_order.DeleteOrder(new_order_id);
+        let new_order_exists_in_db = await db_order.HasOrder(new_order_id);
+        // assert
+        expect(new_order_exists_in_db).toEqual(false)
+    });
+
+    test('DeleteOrder doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
+        //assume
+        let new_order1 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order1_id  = await db_order.AddOrder(new_order1);
+        let new_order2 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order2_id  = await db_order.AddOrder(new_order2);
+        let result1 = await db_order.GetAllOrders();
+        // act
+        await db_order.DeleteOrder("56e6dd2eb4494ed008d595bd")
+        let result2 = await db_order.GetAllOrders();
+        // assert
+
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
+    });
+
+    test('DeleteOrder doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () =>{
+        //assume
+        let new_order1 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order1_id  = await db_order.AddOrder(new_order1);
+        let new_order2 = {
+            TableName: "stolik_03",
+            EmployeeID: "KEL-03",
+            DishesNames: ["pomidorowa", "devolay-zestaw"],
+            Status: "złożony",
+            Creation_date: "2022-09-05 10:30",
+        };
+        let new_order2_id  = await db_order.AddOrder(new_order2);
+        let result1 = await db_order.GetAllOrders();
+        // act
+        await db_order.DeleteOrder("56e6dd2eb4494ed008d595bd")
+        let result2 = await db_order.GetAllOrders();
+        // assert
+
+        expect(result2).toBeDefined();
+        expect(result1.length).toEqual(result2.length);
+    });
 });
