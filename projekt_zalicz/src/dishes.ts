@@ -1,16 +1,26 @@
 import express from 'express';
 import {Request, Response} from 'express';
-import {IReservationAccess} from "idata_access"
-import {getReservationAccess} from 'data_access_selector'
-import {Reservation} from 'model';
+import {IDishAccess} from "idata_access"
+import {getDishesAccess} from 'data_access_selector'
+import {Dish} from 'model';
 
 const  router = express.Router()
 export default router
 
-let db_reservation: IReservationAccess = getReservationAccess();
+let db_dish: IDishAccess = getDishesAccess();
 
 router.get('/', async (req: Request, res: Response) => {
 
-    let all_reservations: Reservation[] = await db_reservation.GetAllReservations();
-    res.status(200).send(all_reservations);
+    let all_dishes: Dish[] = await db_dish.GetAllDishes();
+    res.status(200).send(all_dishes);
 })
+
+router.post('/', async(req:Request, res: Response) =>{
+   let dish: Dish = req.body
+   let newly_added_id = db_dish.AddDish(dish);
+   return Promise.resolve(newly_added_id);
+})
+
+//router.put()
+
+//router.delete()
