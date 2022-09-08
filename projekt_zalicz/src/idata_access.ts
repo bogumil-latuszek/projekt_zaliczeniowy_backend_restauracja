@@ -12,6 +12,7 @@ interface IEmployeeAccess {
 interface IRestaurantAccess {
     HasRestaurant(id: string): Promise<boolean>;
     GetRestaurant(id: string): Promise<Restaurant>;
+    GetAllRestaurants(): Promise<Restaurant[]>;
     AddRestaurant(restaurant: Restaurant): Promise<string>;
     UpdateRestaurant(restaurant: Restaurant, id: string): Promise<void>;
     DeleteRestaurant(id: string): Promise<void>;
