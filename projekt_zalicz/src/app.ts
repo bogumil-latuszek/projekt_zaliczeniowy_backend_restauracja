@@ -6,6 +6,7 @@ import reservations_router from 'reservations'; //1st endpoint import
 import dishes_router from 'dishes';
 import products_router from 'products';
 import restaurants_router from 'restaurants';
+import employees_router from 'employees';
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.use('/reservations/', reservations_router) //1st endpoint registration
 app.use('/dishes/', dishes_router)
 app.use('/products/', products_router)
 app.use('/restaurants/', restaurants_router)
+app.use('/employees/', employees_router)
 
 const cleanUp = (eventType) => {
     dropDataAccess();
