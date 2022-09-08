@@ -97,6 +97,33 @@ describe("GET /employees/:id", () => {
           }
         ))
     });
+
+    it("should be able to find employee using CorporateID", async () => {
+        //assume
+        const employee1: Employee = {
+            CorporateID: "007",
+            Name: "Johnny",
+            Surename: "English",
+            Position: "kelner",
+        }
+        const response1 = await request(baseURL).post("/employees/").send(employee1);
+        const employee_id = response1.body.id
+
+        //act
+        const response = await request(baseURL).get(`/employees/${employee1.CorporateID}`);
+
+        //assert
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual(expect.objectContaining(
+          {
+            _id: employee_id,
+            CorporateID: "007",
+            Name: "Johnny",
+            Surename: "English",
+            Position: "kelner",
+          }
+        ))
+    });
 });
 
 describe("POST /employees/", () => {
@@ -199,6 +226,40 @@ describe("PUT /employees/:id", () => {
           }
         ))
     });
+
+    it("should be able to update employee using CorporateID", async () => {
+        //assume
+        const employee1: Employee = {
+            CorporateID: "1",
+            Name: "Johny",
+            Surename: "Deep",
+            Position: "kelner",
+        }
+        const response1 = await request(baseURL).post("/employees/").send(employee1);
+        const employee_id = response1.body.id
+
+        //act
+        const changed_employee: Employee = {
+            CorporateID: "1",
+            Name: "Johny",
+            Surename: "Deep",
+            Position: "kucharz",
+        }
+        const response = await request(baseURL).put(`/employees/${employee1.CorporateID}`).send(changed_employee);
+
+        //assert
+        expect(response.statusCode).toBe(204);
+        const response2 = await request(baseURL).get(`/employees/${employee_id}`)
+        expect(response2.body).toEqual(expect.objectContaining(
+          {
+            _id: employee_id,
+            CorporateID: "1",
+            Name: "Johny",
+            Surename: "Deep",
+            Position: "kucharz",
+          }
+        ))
+    });
 });
 
 describe("DELETE /employees/:id", () => {
@@ -225,5 +286,27 @@ describe("DELETE /employees/:id", () => {
         expect(response.statusCode).toBe(204);
         const response2 = await request(baseURL).get(`/employees/${employee_id}`)
         expect(response2.statusCode).toBe(404);
+    });
+
+    it("should be able to delete employee using CorporateID", async () => {
+        //assume
+        const employee1: Employee = {
+            CorporateID: "1",
+            Name: "Johny",
+            Surename: "Deep",
+            Position: "kucharz",
+        }
+        const response1 = await request(baseURL).post("/employees/").send(employee1);
+        const employee_id = response1.body.id
+
+        //act
+        const response = await request(baseURL).delete(`/employees/${employee1.CorporateID}`);
+
+        //assert
+        expect(response.statusCode).toBe(204);
+        const response2 = await request(baseURL).get(`/employees/${employee_id}`)
+        expect(response2.statusCode).toBe(404);
+        const response3 = await request(baseURL).get(`/employees/${employee1.CorporateID}`)
+        expect(response3.statusCode).toBe(404);
     });
 });

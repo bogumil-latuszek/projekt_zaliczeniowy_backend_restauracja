@@ -18,7 +18,16 @@ router.get('/:id', async (req: Request, res: Response) => {
     let id = req.params.id
     let exists: boolean = await db_employee.HasEmployee(id)
     if (!exists) {
-        res.status(404).send(`employee with id=${id} doesn't exist`)
+        // maybe it is CorporateID
+        const corporate_id = id
+        const db_id = await db_employee.GetEmployeeDbId(corporate_id);
+        if (db_id) {
+            let employee: Employee = await db_employee.GetEmployee(db_id);
+            res.status(200).send(employee)
+        }
+        else {
+            res.status(404).send(`employee with id=${id} doesn't exist`)
+        }
     }
     else {
         let employee: Employee = await db_employee.GetEmployee(id);
@@ -46,7 +55,17 @@ router.put('/:id', async (req: Request, res: Response) => {
     let id = req.params.id
     let exists: boolean = await db_employee.HasEmployee(id)
     if (!exists) {
-        res.status(404).send(`employee with id=${id} doesn't exist`)
+        // maybe it is CorporateID
+        const corporate_id = id
+        const db_id = await db_employee.GetEmployeeDbId(corporate_id);
+        if (db_id) {
+            let updated_employee: Employee = req.body;
+        await db_employee.UpdateEmployee(updated_employee, db_id);
+            res.status(204).send({})  // 204 - no content
+        }
+        else {
+            res.status(404).send(`employee with id=${id} doesn't exist`)
+        }
     }
     else {
         let updated_employee: Employee = req.body;
@@ -59,7 +78,16 @@ router.delete('/:id', async (req: Request, res: Response) => {
     let id = req.params.id
     let exists: boolean = await db_employee.HasEmployee(id)
     if (!exists) {
-        res.status(404).send(`employee with id=${id} doesn't exist`)
+        // maybe it is CorporateID
+        const corporate_id = id
+        const db_id = await db_employee.GetEmployeeDbId(corporate_id);
+        if (db_id) {
+            await db_employee.DeleteEmployee(db_id);
+            res.status(204).send({})  // 204 - no content
+        }
+        else {
+            res.status(404).send(`employee with id=${id} doesn't exist`)
+        }
     }
     else {
         await db_employee.DeleteEmployee(id);
