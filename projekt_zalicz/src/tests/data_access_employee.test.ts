@@ -8,29 +8,29 @@ import { Mongo_Employee } from "mongo_models"
 import { getEmployeeAccess } from "data_access_selector"
 
 
+let db_employee = getEmployeeAccess();
+
+beforeAll(async () => {
+    await connectDBForTesting();
+});
+
+afterAll(async () => {
+    await disconnectDBForTesting();
+});
+
+afterEach(async () => {
+    try {
+        await Mongo_Employee.collection.drop();
+    }
+    catch (err) {
+        // ignore exception thrown from dropping nonexistent collection
+        if (err.message !== 'ns not found') {
+            throw err;
+        }
+    }
+});
 
 describe("HasEmployee Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
- 
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('HasEmployee returns false when asked for non existant id', async () => {
         //act
@@ -63,27 +63,6 @@ describe("HasEmployee Testing", () => {
 });
 
 describe("GetEmployee Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
- 
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('GetEmployee returns existing employee when given its id', async () => {
         // assume
@@ -131,27 +110,6 @@ describe("GetEmployee Testing", () => {
 });
 
 describe("GetAllEmployees Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
- 
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('GetAllEmployees returns all existing employees', async () => {
         // assume
@@ -205,27 +163,6 @@ describe("GetAllEmployees Testing", () => {
 });
 
 describe("AddEmployee Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('AddEmployee returns id of newly created employee', async () => {
         //assume
@@ -287,27 +224,6 @@ describe("AddEmployee Testing", () => {
 });
 
 describe("UpdateEmployee Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
- 
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('UpdateEmployee updates employee in db when given id of existing employee', async () => {
         // assume
@@ -399,27 +315,6 @@ describe("UpdateEmployee Testing", () => {
 
 
 describe("DeleteEmployee Testing", () => {
-    let db_employee = getEmployeeAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
- 
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Employee.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('DeleteEmployee deletes employee in db when given id of existing employee', async () => {
         // assume
