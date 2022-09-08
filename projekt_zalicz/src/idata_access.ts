@@ -2,6 +2,7 @@ import {Employee, Restaurant, Reservation, Table, Order, Product, Dish} from './
 
 interface IEmployeeAccess {
     HasEmployee(id: string): Promise<boolean>;
+    //GetEmployeeDbId(corporate_id: string): Promise<string | null>;
     GetEmployee(id: string): Promise<Employee>;
     GetAllEmployees(): Promise<Employee[]>;
     AddEmployee(employee: Employee): Promise<string>;

@@ -9,7 +9,7 @@ const ReservationSchema = new Schema<Reservation> ({
 })
 
 const EmployeeSchema = new Schema<Employee>({
-    // _id is auto-populated by mongoose
+    CorporateID: {type: String, required: true},
     Name: {type: String, required: true},
     Surename: {type: String, required: true},
     Position: {type: String, required: true},

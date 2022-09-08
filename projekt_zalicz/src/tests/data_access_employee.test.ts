@@ -49,7 +49,7 @@ describe("HasEmployee Testing", () => {
     test('HasEmployee returns true when asked for existing id', async () => {
         // assume
         const agent: Employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "John",
             Surename: "Bean3",
             Position: "MI6agent3",
@@ -88,7 +88,7 @@ describe("GetEmployee Testing", () => {
     test('GetEmployee returns existing employee when given its id', async () => {
         // assume
         const agent: Employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "John",
             Surename: "Bean2",
             Position: "MI6agent2",
@@ -99,6 +99,7 @@ describe("GetEmployee Testing", () => {
         // assert
         expect(result).toBeDefined();
         expect(result).toHaveProperty("id");
+        expect(result.CorporateID).toEqual(agent.CorporateID);
         expect(result.Name).toEqual(agent.Name);
         expect(result.Surename).toEqual(agent.Surename);
         expect(result.Position).toEqual(agent.Position);
@@ -155,14 +156,14 @@ describe("GetAllEmployees Testing", () => {
     test('GetAllEmployees returns all existing employees', async () => {
         // assume
         let new_employee1 = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Sylvester",
             Surename: "Stalone",
             Position: "rambo",
         }
         let new_employee1_id  = await db_employee.AddEmployee(new_employee1);
         let new_employee2 = {
-            ID: "1",
+            CorporateID: "2",
             Name: "Arnold",
             Surename: "Schwarzenegger",
             Position: "terminator",
@@ -174,6 +175,24 @@ describe("GetAllEmployees Testing", () => {
         expect(result).toBeDefined();
         expect(result.length).toEqual(2);
         expect(result[0]).not.toEqual(result[1]);
+        expect(result).toContainEqual(expect.objectContaining(
+            {
+              _id: expect.anything(),  // DB assigned id
+              CorporateID: "1",        // Corporate asigned id
+              Name: "Sylvester",
+              Surename: "Stalone",
+              Position: "rambo",
+            }
+        ));
+        expect(result).toContainEqual(expect.objectContaining(
+            {
+              _id: expect.anything(),  // DB assigned id
+              CorporateID: "2",        // Corporate asigned id
+              Name: "Arnold",
+              Surename: "Schwarzenegger",
+              Position: "terminator",
+            }
+        ));
     });
 
     test('GetAllEmployees returns empty array when there arent any employees', async () => {
@@ -211,7 +230,7 @@ describe("AddEmployee Testing", () => {
     test('AddEmployee returns id of newly created employee', async () => {
         //assume
         const agent: Employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "John",
             Surename: "Bean",
             Position: "MI6agent",
@@ -221,12 +240,14 @@ describe("AddEmployee Testing", () => {
         const createdDish_id = await dishDataAccess.AddEmployee(agent);
         //assert
         expect(createdDish_id).toBeDefined();
+        // looks like: {"id": "6318bff0fb26f4ec403e7959"}
+        expect(createdDish_id).toEqual(expect.stringMatching(/^[0-9a-f]+/))
     });
     
     test('AddEmployee returns valid id when given object that is an Employee', async () => {
         // assume
         let new_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Johny",
             Surename: "Deep",
             Position: "actor",
@@ -236,6 +257,7 @@ describe("AddEmployee Testing", () => {
         let new_employee_in_db = await db_employee.GetEmployee(new_employee_id);
         // assert
         expect(new_employee_in_db).toBeDefined();
+        expect(new_employee_in_db.CorporateID).toEqual(new_employee.CorporateID);
         expect(new_employee_in_db.Name).toEqual(new_employee.Name);
         expect(new_employee_in_db.Surename).toEqual(new_employee.Surename);
         expect(new_employee_in_db.Position).toEqual(new_employee.Position);
@@ -244,7 +266,7 @@ describe("AddEmployee Testing", () => {
     test('AddEmployee returns valid id when given object that is an Employee but has more fields', async () => {
         // assume
         let new_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Johny",
             Surename: "Deeper",
             Position: "actor",
@@ -256,6 +278,7 @@ describe("AddEmployee Testing", () => {
         let new_employee_in_db = await db_employee.GetEmployee(new_employee_id);
         // assert
         expect(new_employee_in_db).toBeDefined();
+        expect(new_employee_in_db.CorporateID).toEqual(new_employee.CorporateID);
         expect(new_employee_in_db.Name).toEqual(new_employee.Name);
         expect(new_employee_in_db.Surename).toEqual(new_employee.Surename);
         expect(new_employee_in_db.Position).toEqual(new_employee.Position);
@@ -289,14 +312,14 @@ describe("UpdateEmployee Testing", () => {
     test('UpdateEmployee updates employee in db when given id of existing employee', async () => {
         // assume
         let new_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Johny",
             Surename: "Deeper",
             Position: "actor",
         }
         let new_employee_id  = await db_employee.AddEmployee(new_employee);
         let newer_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Johny",
             Surename: "TheDeepest",
             Position: "actor",
@@ -306,15 +329,39 @@ describe("UpdateEmployee Testing", () => {
         let updated_employee_in_db = await db_employee.GetEmployee(new_employee_id);
         // assert
         expect(updated_employee_in_db).toBeDefined();
+        expect(updated_employee_in_db.CorporateID).toEqual(newer_employee.CorporateID);
         expect(updated_employee_in_db.Name).toEqual(newer_employee.Name);
         expect(updated_employee_in_db.Surename).toEqual(newer_employee.Surename);
         expect(updated_employee_in_db.Position).toEqual(newer_employee.Position);
     });
 
+    test('UpdateEmployee can change corporate assigned ID of employee', async () => {
+        // assume
+        let new_employee = {
+            CorporateID: "1",
+            Name: "Johnny",
+            Surename: "English",
+            Position: "agent",
+        }
+        let new_employee_id  = await db_employee.AddEmployee(new_employee);
+        let newer_employee = {
+            CorporateID: "007",
+            Name: "Johnny",
+            Surename: "English",
+            Position: "agent",
+        }
+        // act
+        await db_employee.UpdateEmployee(newer_employee, new_employee_id);
+        let updated_employee_in_db = await db_employee.GetEmployee(new_employee_id);
+        // assert
+        expect(updated_employee_in_db).toBeDefined();
+        expect(updated_employee_in_db.CorporateID).toEqual(newer_employee.CorporateID);
+    });
+
     test('UpdateEmployee throws error when given id of nonexisting employee', async () => {
         // assume
         let new_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "John", 
             Surename: "Unknown",
             Position: "waiter"
@@ -334,7 +381,7 @@ describe("UpdateEmployee Testing", () => {
     test('UpdateEmployee throws error when given id with incorrect type', async () => {
         // assume
         let new_employee = {
-            ID: "1",
+            CorporateID: "1",
             Name: "John", 
             Surename: "NoBeen",
             Position: "waiter"
@@ -377,9 +424,9 @@ describe("DeleteEmployee Testing", () => {
     test('DeleteEmployee deletes employee in db when given id of existing employee', async () => {
         // assume
         let new_employee = {
-            ID: "1",
-            Name: "John", 
-            Surename: "Been",
+            CorporateID: "1",
+            Name: "Johnny",
+            Surename: "English",
             Position: "waiter"
         }
         let new_employee_id  = await db_employee.AddEmployee(new_employee);
@@ -393,14 +440,14 @@ describe("DeleteEmployee Testing", () => {
     test('DeleteEmployee doesnt change db at all when given id of nonexisting Employee, and doesnt throw any errors', async () => {
         //assume
         let new_employee1 = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Sylvester",
             Surename: "Stalone",
             Position: "rambo",
         }
         let new_employee1_id  = await db_employee.AddEmployee(new_employee1);
         let new_employee2 = {
-            ID: "1",
+            CorporateID: "2",
             Name: "Arnold",
             Surename: "Schwarzenegger",
             Position: "terminator",
@@ -418,14 +465,14 @@ describe("DeleteEmployee Testing", () => {
     test('DeleteEmployee doesnt change db at all when given id in wrong notation, and doesnt throw any errors', async () => {
         //assume
         let new_employee1 = {
-            ID: "1",
+            CorporateID: "1",
             Name: "Sylvester",
             Surename: "Stalone",
             Position: "rambo",
         }
         let new_employee1_id  = await db_employee.AddEmployee(new_employee1);
         let new_employee2 = {
-            ID: "1",
+            CorporateID: "2",
             Name: "Arnold",
             Surename: "Schwarzenegger",
             Position: "terminator",

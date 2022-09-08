@@ -6,7 +6,7 @@ export interface Reservation {
 }
 
 export interface Employee{
-    ID: string;
+    CorporateID: string;
     Name: string;
     Surename: string;
     Position: string;

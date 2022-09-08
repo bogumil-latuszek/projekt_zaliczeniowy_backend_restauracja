@@ -375,6 +375,7 @@ class MongoDbEmployees implements IEmployeeAccess {
     async UpdateEmployee(employee: Employee, id: string): Promise<void> {
         let originalEmployee = await Mongo_Employee.findById(id);
         if (originalEmployee != null) {
+            originalEmployee.CorporateID = employee.CorporateID;
             originalEmployee.Name = employee.Name;
             originalEmployee.Surename = employee.Surename;
             originalEmployee.Position = employee.Position;
