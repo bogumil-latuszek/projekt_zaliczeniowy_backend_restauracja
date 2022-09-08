@@ -62,6 +62,34 @@ describe("HasEmployee Testing", () => {
     });
 });
 
+describe("GetEmployeeDbId Testing", () => {
+
+    test('GetEmployeeDbId returns database ID of employee when given its CorporateID', async () => {
+        // assume
+        const agent: Employee = {
+            CorporateID: "007",
+            Name: "Johnny",
+            Surename: "English",
+            Position: "MI6agent",
+        };
+        let new_employee_id  = await db_employee.AddEmployee(agent);
+        // act
+        let db_id = await db_employee.GetEmployeeDbId("007");
+        // assert
+        expect(db_id).toBeDefined();
+        // looks like: {"id": "6318bff0fb26f4ec403e7959"}
+        expect(db_id).toEqual(expect.stringMatching(/^[0-9a-f]+/))
+        expect(db_id).toEqual(new_employee_id);
+    });
+
+    test('GetEmployeeDbId returns null for noexisting CorporateID', async () => {
+        //act
+        let db_id = await db_employee.GetEmployeeDbId("000000007");
+        // assert
+        expect(db_id).toBe(null);
+    });
+});
+
 describe("GetEmployee Testing", () => {
 
     test('GetEmployee returns existing employee when given its id', async () => {

@@ -351,6 +351,18 @@ class MongoDbEmployees implements IEmployeeAccess {
             return Promise.resolve(false);
         }
     }
+    async GetEmployeeDbId(corporate_id: string): Promise<string | null> {
+        try {
+            let existing_employee = await Mongo_Employee.findOne({CorporateID: corporate_id});
+            if (existing_employee == null) { // employee or null
+                return Promise.resolve(null);
+            }
+            return Promise.resolve(existing_employee._id.toString());
+        }
+        catch (error){
+            return Promise.resolve(null);
+        }
+    }
     async GetEmployee(id: string): Promise<Employee>  {
         try {
             let existing_employee = await Mongo_Employee.findById(id);
