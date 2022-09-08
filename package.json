@@ -6,6 +6,13 @@
   "scripts": {
     "test_data_access": "jest --coverage -- data_access",
     "test_endpoint": "jest --coverage -- endpoint",
+
+    "test_ep_dish": "jest --coverage -- endpoint_dish",
+    "test_ep_emp": "jest --coverage -- endpoint_emp",
+    "test_ep_prod": "jest --coverage -- endpoint_prod",
+    "test_ep_rest": "jest --coverage -- endpoint_rest",
+    "test_ep_tab": "jest --coverage -- endpoint_tab",
+
     "test": "jest --coverage",
     "startdevserver": "nodemon ./projekt_zalicz/src/app.ts",
     "start": "ts-node ./projekt_zalicz/src/app.ts"
