@@ -1,5 +1,4 @@
 export interface Reservation {
-    //Table_Id : string;
     TableName: string;
     Time_Start : string;
     Time_End : string
@@ -20,11 +19,8 @@ export interface Dish{
 }
 
 export interface Order{
-    //Table_Id : string;
     TableName: string;
-    //_Employee : Employee;
     EmployeeID: string;
-    //Dishes : Dish[];
     DishesNames: string[];
     Status: string;
     Creation_date: string;
@@ -35,7 +31,6 @@ export interface Table{
     Name: string;
     Capacity: number;
     Status: string;
-    //Orders: Order[];
 }
 
 export interface Restaurant{
