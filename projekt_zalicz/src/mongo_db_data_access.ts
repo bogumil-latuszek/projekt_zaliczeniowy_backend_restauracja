@@ -223,8 +223,13 @@ class MongoDbProducts implements IProductAccess {
         }
     }
     async GetAllProducts(): Promise<Product[]> {
-        let productes: Product[] = await Mongo_Product.find()
-        return Promise.resolve(productes);
+        let products: Product[] = await Mongo_Product.find()
+        return Promise.resolve(products);
+    }
+
+    async GetSelectedProducts(sorted_by: string, offset: number = 0, limit: number = 10): Promise<Product[]> {
+        let products: Product[] = await Mongo_Product.find().skip(offset).limit(limit)
+        return Promise.resolve(products);
     }
 
     async AddProduct(product: Product): Promise<string> {

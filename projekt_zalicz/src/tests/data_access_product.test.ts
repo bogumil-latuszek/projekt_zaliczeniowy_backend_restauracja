@@ -143,6 +143,93 @@ describe("GetAllProductes Testing", () => {
     });
 });
 
+
+describe("GetSelectedProducts Testing", () => {
+
+    test('GetSelectedProducts returns N products according to limit', async () =>{
+        // assume
+        for (let idx = 0; idx < 10; idx++) {       
+            let new_product: Product = {
+                Name: "ziemniaki", 
+                Price: 5,
+                Quantity: idx,
+                Measurement_Units: "kg"
+            }
+            await db_product.AddProduct(new_product);
+        }
+        // act
+        const limit = 5
+        let result = await db_product.GetSelectedProducts("Quantity", 0, limit);
+        // assert
+        expect(result.length).toEqual(5);
+        expect(result[0]).toEqual(expect.objectContaining({Quantity: 0}));
+        expect(result[4]).toEqual(expect.objectContaining({Quantity: 4}));
+    });
+
+    test('GetSelectedProducts returns 10 products if no limit provided', async () =>{
+        // assume
+        for (let idx = 0; idx < 20; idx++) {       
+            let new_product: Product = {
+                Name: "ziemniaki", 
+                Price: 5,
+                Quantity: idx,
+                Measurement_Units: "kg"
+            }
+            await db_product.AddProduct(new_product);
+        }
+        // act
+        const limit = 5
+        let result = await db_product.GetSelectedProducts("Quantity", 0);
+        // assert
+        expect(result.length).toEqual(10);
+        expect(result[0]).toEqual(expect.objectContaining({Quantity: 0}));
+        expect(result[9]).toEqual(expect.objectContaining({Quantity: 9}));
+    });
+
+    test('GetSelectedProducts returns first N products (limit) starting from offset', async () =>{
+        // assume
+        for (let idx = 0; idx < 20; idx++) {       
+            let new_product: Product = {
+                Name: "ziemniaki", 
+                Price: 5,
+                Quantity: idx,
+                Measurement_Units: "kg"
+            }
+            await db_product.AddProduct(new_product);
+        }
+        // act
+        const limit = 5
+        const offset = 5
+        let result = await db_product.GetSelectedProducts("Quantity", offset, limit);
+        // assert
+        expect(result.length).toEqual(5);
+        expect(result[0]).toEqual(expect.objectContaining({Quantity: 5}));
+        expect(result[4]).toEqual(expect.objectContaining({Quantity: 9}));
+    });
+
+    test('GetSelectedProducts returns first 10 products if no limit nor offset given', async () =>{
+        // assume
+        for (let idx = 0; idx < 20; idx++) {       
+            let new_product: Product = {
+                Name: "ziemniaki", 
+                Price: 5,
+                Quantity: idx,
+                Measurement_Units: "kg"
+            }
+            await db_product.AddProduct(new_product);
+        }
+        // act
+        const limit = 5
+        const offset = 5
+        let result = await db_product.GetSelectedProducts("Quantity");
+        // assert
+        expect(result.length).toEqual(10);
+        expect(result[0]).toEqual(expect.objectContaining({Quantity: 0}));
+        expect(result[9]).toEqual(expect.objectContaining({Quantity: 9}));
+    });
+
+});
+
 describe("AddProduct Testing", () => {
 
     test('AddProduct returns id of newly created product', async () => {

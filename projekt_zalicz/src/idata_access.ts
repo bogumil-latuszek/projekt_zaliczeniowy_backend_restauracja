@@ -55,6 +55,7 @@ interface IProductAccess {
     HasProduct(id:string): Promise<boolean>;
     GetProduct(id:string): Promise<Product | undefined>;
     GetAllProducts(): Promise<Product[]>;
+    GetSelectedProducts(sorted_by: string, offset?: number, limit?: number): Promise<Product[]>;
     AddProduct(Product:Product): Promise<string>;
     UpdateProduct(Product:Product, id:string): Promise<void>;
     DeleteProduct(id:string): Promise<void>;
