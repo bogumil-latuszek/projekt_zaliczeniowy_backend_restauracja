@@ -4,6 +4,8 @@ import { initDataAccess, dropDataAccess } from 'data_access_selector'
 
 import reservations_router from 'reservations'; //1st endpoint import
 import dishes_router from 'dishes';
+import products_router from 'products';
+import restaurants_router from 'restaurants';
 
 const app = express()
 
@@ -13,8 +15,11 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Witamy w naszej restauracji')
 })
 
+
 app.use('/reservations/', reservations_router) //1st endpoint registration
 app.use('/dishes/', dishes_router)
+app.use('/products/', products_router)
+app.use('/restaurants/', restaurants_router)
 
 const cleanUp = (eventType) => {
     dropDataAccess();
