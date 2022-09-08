@@ -228,6 +228,28 @@ describe("GetSelectedProducts Testing", () => {
         expect(result[9]).toEqual(expect.objectContaining({Quantity: 9}));
     });
 
+    test('GetSelectedProducts returns first N products (limit) starting from offset sorted by given key', async () =>{
+        // assume
+        for (let idx = 0; idx < 20; idx++) {
+            let new_product: Product = {
+                Name: "ziemniaki",
+                Price: 20 - idx,
+                Quantity: idx,
+                Measurement_Units: "kg"
+            }
+            await db_product.AddProduct(new_product);
+        }
+        // act
+        const limit = 5
+        const offset = 5
+        let result = await db_product.GetSelectedProducts("Price", offset, limit);
+        // assert
+        expect(result.length).toEqual(5);
+        // (1,19) (2,18) (3,17) (4,16) (5,15)    (6,14) (7,13) (8,12) (9,11) (10,10)     ...
+        expect(result[0]).toEqual(expect.objectContaining({Price: 6, Quantity: 14}));
+        expect(result[4]).toEqual(expect.objectContaining({Price: 10, Quantity: 10}));
+    });
+
 });
 
 describe("AddProduct Testing", () => {

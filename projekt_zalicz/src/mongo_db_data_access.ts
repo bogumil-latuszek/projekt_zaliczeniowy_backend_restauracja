@@ -228,7 +228,21 @@ class MongoDbProducts implements IProductAccess {
     }
 
     async GetSelectedProducts(sorted_by: string, offset: number = 0, limit: number = 10): Promise<Product[]> {
-        let products: Product[] = await Mongo_Product.find().skip(offset).limit(limit)
+        let sort_by = {}
+        if (sorted_by.toLowerCase() == "price") {
+            sort_by = {Price: "asc"}
+        }
+        else if (sorted_by.toLowerCase() == "quantity") {
+            sort_by = {Quantity: "asc"}
+        }
+        else if (sorted_by.toLowerCase() == "measurement_units") {
+            sort_by = {Measurement_Units: "asc"}
+        }
+        else {
+            sort_by = {Name: "asc"}  // default
+        }
+
+        let products: Product[] = await Mongo_Product.find().sort(sort_by).skip(offset).limit(limit)
         return Promise.resolve(products);
     }
 
