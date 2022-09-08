@@ -1,3 +1,6 @@
+import request from "supertest"
+const baseURL = "http://localhost:3000"
+
 describe("GET /", () => {
 
     it("should return 200 from application main URL", async () => {
@@ -10,17 +13,14 @@ describe("GET /", () => {
 describe("POST /", () => {
 
     const dish = {
-        id: crypto.randomUUID(),
-        item: "Drink water",
-        completed: false,
         Name: "koktail pomarańczowy",
-        Price: number,
-        Category: string,
+        Price: 7,
+        Category: "desery",
     }
 
     it("should return 200 from application main URL", async () => {
         
-      const response = await request(baseURL).post("/").
+      const response = await request(baseURL).post("/");
       expect(response.statusCode).toBe(200);
     });
 
