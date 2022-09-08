@@ -7,28 +7,29 @@ import { Product } from "model"
 import { Mongo_Product, Mongo_Reservation } from "mongo_models"
 import { getProductsAccess } from "data_access_selector"
 
+let db_product = getProductsAccess();
+
+beforeAll(async () => {
+    await connectDBForTesting();
+});
+
+afterAll(async () => {
+    await disconnectDBForTesting();
+});
+
+afterEach(async () => {
+    try {
+        await Mongo_Product.collection.drop();
+    }
+    catch (err) {
+        // ignore exception thrown from dropping nonexistent collection
+        if (err.message !== 'ns not found') {
+            throw err;
+        }
+    }
+});
+
 describe("HasProduct Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('HasProduct returns false when asked for non existant id', async () =>{
         //act
@@ -61,27 +62,6 @@ describe("HasProduct Testing", () => {
 });
 
 describe("GetProduct Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('GetProduct returns existing product when given its id', async () =>{
         // assume
@@ -129,27 +109,6 @@ describe("GetProduct Testing", () => {
 });
 
 describe("GetAllProductes Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('GetAllProductes returns all existing productes', async () =>{
         // assume
@@ -185,27 +144,6 @@ describe("GetAllProductes Testing", () => {
 });
 
 describe("AddProduct Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('AddProduct returns id of newly created product', async () => {
         //assume
@@ -265,27 +203,6 @@ describe("AddProduct Testing", () => {
 });
 
 describe("UpdateProduct Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('UpdateProduct updates product in db when given id of existing product', async () =>{
         // assume
@@ -355,27 +272,6 @@ describe("UpdateProduct Testing", () => {
 });
 
 describe("DeleteProduct Testing", () => {
-    let db_product = getProductsAccess();
-
-    beforeAll(async () => {
-        await connectDBForTesting();
-    });
-    
-    afterAll(async () => {
-        await disconnectDBForTesting();
-    });
-
-    afterEach(async () => {
-        try {
-            await Mongo_Product.collection.drop();
-        }
-        catch (err) {
-            // ignore exception thrown from dropping nonexistent collection
-            if (err.message !== 'ns not found') {
-                throw err;
-            }
-        }
-    });
 
     test('DeleteProduct deletes product in db when given id of existing product', async () =>{
         // assume
