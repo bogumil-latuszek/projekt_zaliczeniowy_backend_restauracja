@@ -20,12 +20,11 @@ export async function connectDB() {
 
 export function disconnectDB() {
     try {
-        //await mongoose.connection.close();
         if (db_connection) {
             db_connection.disconnect();
             db_connection = null;
+            console.log("MongoDB disconnected");
         }
-        console.log("MongoDB disconnected");
     } catch (error) {
         console.log("MongoDB disconnect error");
     }
@@ -34,7 +33,6 @@ export function disconnectDB() {
 export async function connectDBForTesting() {
     try {
         await mongoose.connect(config.MONGO_TEST_URI);
-        console.log("DB:test started");
     } catch (error) {
         console.log("DB:test connect error");
     }
@@ -43,9 +41,16 @@ export async function connectDBForTesting() {
 export async function disconnectDBForTesting() {
     try {
         await mongoose.connection.close();
-        console.log("DB:test disconnected");
     } catch (error) {
         console.log("DB:test disconnect error");
+    }
+}
+
+export async function clearDB() {
+    const collections = await mongoose.connection.db.collections();
+
+    for (let collection of collections) {
+        await collection.deleteMany({})
     }
 }
 
@@ -418,6 +423,10 @@ class MongoDbRestaurants implements IRestaurantAccess {
         catch (error){
             throw new  Error("no restaurant found for given id");
         }
+    }
+    async GetAllRestaurants(): Promise<Restaurant[]> {
+        let restaurants: Restaurant[] = await Mongo_Restaurant.find()
+        return Promise.resolve(restaurants);
     }
     async AddRestaurant(restaurant: Restaurant): Promise<string> {
         const mongo_restaurant = new Mongo_Restaurant({ ...restaurant });
