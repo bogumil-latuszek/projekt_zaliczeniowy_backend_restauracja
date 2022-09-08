@@ -11,6 +11,7 @@
     "test_ep_emp": "jest --coverage -- endpoint_emp",
     "test_ep_prod": "jest --coverage -- endpoint_prod",
     "test_ep_rest": "jest --coverage -- endpoint_rest",
+    "test_ep_reserv": "jest --coverage -- endpoint_reserv",
     "test_ep_tab": "jest --coverage -- endpoint_tab",
 
     "test": "jest --coverage",
