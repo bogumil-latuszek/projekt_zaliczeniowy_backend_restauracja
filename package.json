@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test_data_access": "jest --coverage -- data_access",
+    "test_endpoint": "jest --coverage -- endpoint",
     "test": "jest --coverage",
     "startdevserver": "nodemon ./projekt_zalicz/src/app.ts",
     "start": "ts-node ./projekt_zalicz/src/app.ts"
