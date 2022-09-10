@@ -56,3 +56,28 @@ router.delete('/:id', async (req: Request, res: Response) => {
         res.status(204).send({})  // 204 - no content
     }
 })
+//paginacja i sortowanie
+router.get('/', async (req: Request, res: Response) => { 
+    // mozliwe query: /products/?limit=10&offset=30&sort=nazwa
+    let limit: number = +req.query.limit;
+    let offset: number = +req.query.offset;
+    let sort_by: string = req.query.sort_by as string;
+    const provided_query_keys: string[] = Object.keys(req.query)
+
+    let all_products: Product[];
+    if (provided_query_keys.length) {
+        if (sort_by) {
+            all_products = await db_product.GetSelectedProducts(sort_by, offset, limit);
+            res.status(200).send(all_products);
+        }
+        else {
+            const err = "Product query is missing required 'sort_by' key";
+            const allowed = "(allowed: sort_by, offset, limit)";
+            res.status(400).send(`${err}. You have provided: '${provided_query_keys}'. ${allowed}`);
+        }
+    }
+    else {
+        all_products = await db_product.GetAllProducts();
+        res.status(200).send(all_products);
+    }
+})
