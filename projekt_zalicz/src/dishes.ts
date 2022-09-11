@@ -46,9 +46,6 @@ router.put('/:id', async(req:Request, res: Response) =>{
     catch(err){
         res.status(400).send(`error: ${err}`);
     }
-    let searching_id = req.params.id
-    let dish: Dish = req.body
-    await db_dish.UpdateDish(dish, searching_id);
     res.status(204).send({})  // 204 - no content
  })
 
