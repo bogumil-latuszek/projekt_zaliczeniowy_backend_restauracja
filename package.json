@@ -13,8 +13,9 @@
     "test_ep_rest": "jest --coverage -- endpoint_rest",
     "test_ep_reserv": "jest --coverage -- endpoint_reserv",
     "test_ep_tab": "jest --coverage -- endpoint_tab",
-
-    "test": "jest --coverage",
+    "test_ep_ord": "jest --coverage -- endpoint_orders",
+    
+    "test": "jest --coverage",    
     "startdevserver": "nodemon ./projekt_zalicz/src/app.ts",
     "start": "ts-node ./projekt_zalicz/src/app.ts"
   },
