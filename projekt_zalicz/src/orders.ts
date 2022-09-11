@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 import {Request, Response} from 'express';
 import {IOrderAccess, IDishAccess} from "idata_access"
 import {getOrdersAccess, getDishesAccess} from 'data_access_selector'
@@ -52,8 +52,8 @@ router.post('/', async(req:Request, res: Response) =>{
     }
     //third, create order
     try {
-        var date = new Date();
-        let current_date = date.getUTCDate.toString();
+        var date = new Date()
+        let current_date = date.toString();
         let order: Order = {
             TableName: req.body.TableName,
             EmployeeID: req.body.EmployeeID,
@@ -87,9 +87,34 @@ router.put('/:id', async(req:Request, res: Response) =>{
     let order_exists = await db_order.HasOrder(searching_id);
     if(order_exists){
         await db_order.DeleteOrder(searching_id);
-        res.status(204).send({})  // 204 - no content
+        res.status(204).send({})  // 204 - no content// mozliwe query: /products/?limit=10&offset=30&sort=nazwa
+    let limit: number = +req.query.limit;
+    let offset: number = +req.query.offset;
     }
     else{
         res.status(404).send(`order with id=${searching_id} doesn't exist`);
     }
  })
+
+
+// raport zamówień per kelner
+
+router.get('/taken_by_waiter/:id', async (req: Request, res:Response)=>{
+
+    let waiter_id: string = req.params.id;
+    let orders_found : Order[]= await db_order.GetOrdersTakenByEmployee(waiter_id);
+    res.status(200).send(orders_found);
+})
+
+
+// raport zamowień we wskazanym okresie czasu
+router.get('/timeframe/:start/:end', async (req: Request, res:Response)=>{ //for some reason this is never chosen when given proper request
+    // mozliwe query: /products/?start=10&end=30
+    let start: string = req.params.start
+    let end: string = req.params.end // tostring is just to make it compile
+
+    let orders_found : Order[]= await db_order.GetOrdersInGivenTimeFrame(start, end);
+    res.status(200).send(orders_found);
+})
+
+// raport przychodów we wskazanym okresie czasu

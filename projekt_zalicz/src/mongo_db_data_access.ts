@@ -126,6 +126,24 @@ class MongoDbReservation implements IReservationAccess {
 // ---------------- Dish
 
 class MongoDbDishes implements IDishAccess {
+   
+    async GetDishesByNames(dishes_names: string[]): Promise<Dish[]> {
+        // let dishes : Dish[] = {null}
+        // dishes_names.forEach(element => {
+        //     Mongo_Dish.findOne({ Name: element })
+
+        // });
+        let dishes: Dish[] = await Mongo_Dish.find({Name: {$in: dishes_names}})//this crushes the app
+        return Promise.resolve(dishes);
+    }
+
+    async CombineDishesPrices(dishes: Dish[]): Promise<number>{
+        let combined_price: number = 0;
+        dishes.forEach(element => {
+            combined_price = combined_price + element.Price ;
+        });
+        return Promise.resolve(combined_price);
+    }
 
     async HasDish(_id:string): Promise<boolean> {
         try {
@@ -494,7 +512,22 @@ class MongoDbRestaurants implements IRestaurantAccess {
 }
 
 class MongoDbOrders implements IOrderAccess {
-    
+
+    async GetOrdersInGivenTimeFrame(start: string, end: string): Promise<Order[]> {
+        const start_date= Date.parse(start)//Date.parse(start);
+        const end_date= Date.parse(end)//Date.parse(end);
+        let orders_in_timeframe: Order[] = [];
+        let all_orders_in_db = await Mongo_Order.find()
+        all_orders_in_db.forEach(element => {
+            let creation_date_parsed = Date.parse(element.Creation_date)
+            if(creation_date_parsed < end_date && creation_date_parsed > start_date ){
+                orders_in_timeframe.push(element);
+            }
+        });
+        //let orders: Order[] = await Mongo_Order.find({Creation_date: { $gt: start_date, $lt: end_date }});
+        return Promise.resolve(orders_in_timeframe);
+    }
+
     async HasOrder(order_id: string): Promise<boolean> {
         try {
             let existing_order = await Mongo_Order.findById(order_id);
