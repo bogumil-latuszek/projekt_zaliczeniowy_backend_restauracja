@@ -44,11 +44,11 @@ interface IOrderAccess {
     GetOrder(order_id:string): Promise<Order | undefined>;
     GetAllOrders(): Promise<Order[]>;
     GetOrdersForTable(table_name: string): Promise<Order[]>;
-    GetOrdersTakenByEmployee(employee_id: string): Promise<Order[]>;
     AddOrder(order:Order): Promise<string>;
     UpdateOrder(order_id:string, order:Order): Promise<void>;
     DeleteOrder(order_id:string): Promise<void>;
-    //RaportOrders(): Promise<Order[]>;
+    GetOrdersTakenByEmployee(employee_id: string): Promise<Order[]>;
+    GetOrdersInGivenTimeFrame(start:string, end:string): Promise<Order[]>;
 }
 
 interface IProductAccess {
@@ -62,6 +62,8 @@ interface IProductAccess {
 }
 
 interface IDishAccess {
+    GetDishesByNames(dishes_names: string[]): Promise<Dish[]>;
+    CombineDishesPrices(dishes: Dish[]): Promise<number>;
     HasDish(id:string): Promise<boolean>;
     GetDish(id:string): Promise<Dish>;
     GetAllDishes(): Promise<Dish[]>;
