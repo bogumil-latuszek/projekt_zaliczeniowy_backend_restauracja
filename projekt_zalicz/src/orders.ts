@@ -135,3 +135,10 @@ router.get('/timeframe_earnings/:start/:end', async (req: Request, res:Response)
 })
 
 //raport zamówień per stolik
+
+router.get('/table/:name', async (req: Request, res:Response)=>{ //it works, but you need to send parameter without quotation marks
+
+    let table_name: string = req.params.name;
+    let orders_found : Order[]= await db_order.GetOrdersForTable(table_name);
+    res.status(200).send(orders_found);
+})
