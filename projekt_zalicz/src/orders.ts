@@ -118,3 +118,20 @@ router.get('/timeframe/:start/:end', async (req: Request, res:Response)=>{ //for
 })
 
 // raport przychodów we wskazanym okresie czasu
+
+router.get('/timeframe_earnings/:start/:end', async (req: Request, res:Response)=>{ //for some reason this is never chosen when given proper request
+    // mozliwe query: /products/?start=10&end=30
+    let start: string = req.params.start
+    let end: string = req.params.end // tostring is just to make it compile
+
+    let orders_found : Order[]= await db_order.GetOrdersInGivenTimeFrame(start, end);
+    let sum = 0;
+    orders_found.forEach(element => {
+        if(element.Bill){
+            sum = element.Bill + sum;
+        }
+    });
+    res.status(200).send(`${sum}`);
+})
+
+//raport zamówień per stolik

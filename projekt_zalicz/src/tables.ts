@@ -8,6 +8,11 @@ const  router = express.Router()
 export default router
 
 let db_table: ITableAccess = getTablesAccess();
+//Wyszukiwarka wolnego stolika w danym dniu dla wskazanej ilości osób.
+// router.get('/free', async (req: Request, res: Response) => {
+//     let all_tables: Table[] = await db_table.GetFreeTables();
+//     res.status(200).send(all_tables);
+// })
 
 router.get('/', async (req: Request, res: Response) => {
     let all_tables: Table[] = await db_table.GetAllTables();
