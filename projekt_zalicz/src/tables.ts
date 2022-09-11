@@ -9,10 +9,14 @@ export default router
 
 let db_table: ITableAccess = getTablesAccess();
 //Wyszukiwarka wolnego stolika w danym dniu dla wskazanej ilości osób.
-// router.get('/free', async (req: Request, res: Response) => {
-//     let all_tables: Table[] = await db_table.GetFreeTables();
-//     res.status(200).send(all_tables);
-// })
+router.get('/available/:capacity', async (req: Request, res: Response) => {
+    let capacity: number = +req.params.capacity;
+    let available_table: Table = await db_table.FindAvailableTable(capacity);
+    if(available_table == null){
+        res.status(404).send("couldn't find such table")
+    }
+    res.status(200).send(available_table);
+})
 
 router.get('/', async (req: Request, res: Response) => {
     let all_tables: Table[] = await db_table.GetAllTables();

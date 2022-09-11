@@ -35,7 +35,7 @@ interface ITableAccess {
     AddTable(Table:Table): Promise<string>;
     UpdateTable(Table:Table, id:string): Promise<void>;
     DeleteTable(id:string): Promise<void>;
-    FindFreeTable(): Promise<Table | undefined>;
+    FindAvailableTable(capacity: number): Promise<Table | undefined>;
     //RaportTables(): Promise<Table[]>;
 }
 

@@ -302,8 +302,9 @@ class MongoDbProducts implements IProductAccess {
 
 class MongoDbTables implements ITableAccess {
 
-    FindFreeTable(): Promise<Table> {
-        throw new Error('Method not implemented.');
+    async FindAvailableTable(capacity: number): Promise<Table> {
+        let available_table = Mongo_Table.findOne({Status: "wolny", Capacity: {$gt: capacity-1}})
+        return Promise.resolve(available_table);
     }
 
     async HasTable(_id:string): Promise<boolean> {
