@@ -8,6 +8,7 @@ import products_router from 'products';
 import restaurants_router from 'restaurants';
 import employees_router from 'employees';
 import tables_router from 'tables';
+import orders_router from 'orders';
 
 const app = express()
 
@@ -24,6 +25,7 @@ app.use('/products/', products_router)
 app.use('/restaurants/', restaurants_router)
 app.use('/employees/', employees_router)
 app.use('/tables/', tables_router)
+app.use('/orders/', orders_router)
 
 const cleanUp = (eventType) => {
     dropDataAccess();
