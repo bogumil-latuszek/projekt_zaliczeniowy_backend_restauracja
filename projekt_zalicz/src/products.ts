@@ -57,7 +57,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     }
 })
 //paginacja i sortowanie
-router.get('/', async (req: Request, res: Response) => { 
+router.get('/', async (req: Request, res: Response) => {  //how does the app know which endpoint is being asked when no query is given?
     // mozliwe query: /products/?limit=10&offset=30&sort=nazwa
     let limit: number = +req.query.limit;
     let offset: number = +req.query.offset;

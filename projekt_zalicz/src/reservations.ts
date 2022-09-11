@@ -41,14 +41,11 @@ router.put('/:id', async(req:Request, res: Response) =>{
     try{
         let searching_id = req.params.id
         let reservation: Reservation = req.body
-     let newly_added_id = await db_reservation.UpdateReservation(reservation, searching_id);
+        let newly_added_id = await db_reservation.UpdateReservation(reservation, searching_id);
     }
     catch(err){
         res.status(400).send(`error: ${err}`);
     }
-    let searching_id = req.params.id
-    let reservation: Reservation = req.body
-    await db_reservation.UpdateReservation(reservation, searching_id);
     res.status(204).send({})  // 204 - no content
  })
 
