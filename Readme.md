@@ -32,6 +32,7 @@ npm install
 npm run test_data_access 
 ```
 * Testy kolejnych endpointów
+(przed uruchomieniem:``` npm start``` i poczekaj aż aplikacja podepnie się do bazy danych)
 ```
 npm run test_ep_dishes 
 npm run test_ep_employees 
